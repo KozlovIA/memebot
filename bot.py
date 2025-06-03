@@ -47,6 +47,10 @@ def get_random_meme():
         return None
     return random.choice(MEMES_LIST)
 
+async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    count = len(MEMES_LIST)
+    await update.message.reply_text(f"Сейчас доступно {count} мемов.")
+
 # --- Проверка админа ---
 def is_admin(username: str):
     print(username)
@@ -180,6 +184,7 @@ async def main():
     # Личные команды
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help))
+    application.add_handler(CommandHandler("meme_count", meme_count))
     application.add_handler(CommandHandler("random_meme", random_meme))
     application.add_handler(CommandHandler("meme_of_the_day", meme_of_the_day))
     application.add_handler(CommandHandler("lock_mem_add", lock_mem_add))
