@@ -174,6 +174,8 @@ async def group_command_handler(update: Update, context: ContextTypes.DEFAULT_TY
         await meme_of_the_day(update, context)
 
 # --- Основной запуск ---
+import asyncio
+import nest_asyncio
 
 async def main():
     load_config()
@@ -181,7 +183,7 @@ async def main():
 
     application = ApplicationBuilder().token(CONFIG['token']).build()
 
-    # Личные команды
+    # Добавляем обработчики
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help))
     application.add_handler(CommandHandler("meme_count", meme_count))
@@ -189,14 +191,26 @@ async def main():
     application.add_handler(CommandHandler("meme_of_the_day", meme_of_the_day))
     application.add_handler(CommandHandler("lock_mem_add", lock_mem_add))
     application.add_handler(CommandHandler("unlock_mem_add", unlock_mem_add))
-    application.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, add_meme))
 
     # В группах — только команды случайного мема и мем дня
-    application.add_handler(MessageHandler(filters.ChatType.GROUPS & filters.Command(['random_meme', 'meme_of_the_day']), group_command_handler))
+    application.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, add_meme))
 
-    logger.info("Bot started")
-    await application.run_polling()
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling()
+    print("Bot is running")
+
+    # Ждём Ctrl+C (работает в большинстве сред)
+    try:
+        while True:
+            await asyncio.sleep(3600)
+    except (KeyboardInterrupt, SystemExit):
+        print("Stopping bot...")
+
+    await application.updater.stop_polling()
+    await application.stop()
+    await application.shutdown()
 
 if __name__ == '__main__':
-    import asyncio
-    asyncio.run(main())
+    nest_asyncio.apply()
+    asyncio.get_event_loop().run_until_complete(main())
