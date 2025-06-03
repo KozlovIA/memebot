@@ -11,7 +11,7 @@ import tempfile
 import asyncio
 import nest_asyncio
 
-BOT_VERSION = "v1.0.0"
+BOT_VERSION = "v1.0.1"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log.log"
