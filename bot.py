@@ -6,6 +6,8 @@ import datetime
 from telegram import Update, InputFile
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, ChatMemberHandler
 
+BOT_VERSION = "v1.0.0"
+
 # --- Логирование ---
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -218,6 +220,11 @@ async def group_command_handler(update: Update, context: ContextTypes.DEFAULT_TY
     elif text.startswith('/meme_of_the_day'):
         await meme_of_the_day(update, context)
 
+
+# --- version ---
+async def version(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"Версия бота: {BOT_VERSION}")
+
 # --- Основной запуск ---
 import asyncio
 import nest_asyncio
@@ -237,7 +244,8 @@ async def main():
     application.add_handler(CommandHandler("lock_mem_add", lock_mem_add))
     application.add_handler(CommandHandler("unlock_mem_add", unlock_mem_add))
     application.add_handler(CommandHandler("export_memes", export_memes))
-
+    application.add_handler(CommandHandler("version", version))
+    
     # В группах — только команды случайного мема и мем дня
     application.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, add_meme))
 
