@@ -1,34 +1,48 @@
 import logging
 import os
-import random
 import yaml
 import datetime
 from telegram import Update, InputFile
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, ChatMemberHandler
 
+import numpy as np
+import zipfile
+import tempfile
+import asyncio
+import nest_asyncio
+
 BOT_VERSION = "v1.0.0"
 
 # --- Логирование ---
+LOG_FILE = os.getcwd() + "/log.log"
+
 logging.basicConfig(
+    level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    handlers=[
+        logging.FileHandler(LOG_FILE, encoding='utf-8'),
+        logging.StreamHandler()
+    ]
 )
+
 logger = logging.getLogger(__name__)
 
 # --- Глобальные переменные ---
 CONFIG = {}
 MEMES_FOLDER = ""
 ADMINS = set()
-ALLOW_USER_ADD = True  # По умолчанию разрешаем добавлять мемы
-MEMES_DAY = {}  # user_id: (filename, date)
-MEMES_LIST = []  # список мемов для быстрого доступа
+ALLOW_USER_ADD = True
+MEMES_DAY = {}
+MEMES_LIST = []
+MEME_INDEX = 0
+MEME_ORDER = []
 
 # --- Чтение конфига ---
-def load_config(path='config.yaml'):
+def load_config(path=os.getcwd() + "/config.yaml"):
     global CONFIG, MEMES_FOLDER, ADMINS
     with open(path, 'r', encoding='utf-8') as f:
         CONFIG = yaml.safe_load(f)
-    MEMES_FOLDER = CONFIG.get('memes_folder', './memes')
+    MEMES_FOLDER = os.getcwd() + CONFIG.get('memes_folder', '/memes')
     ADMINS.update(CONFIG.get('admins', []))
     if not os.path.exists(MEMES_FOLDER):
         os.makedirs(MEMES_FOLDER)
@@ -43,13 +57,7 @@ def load_memes_list():
     ]
     logger.info(f"Loaded {len(MEMES_LIST)} memes.")
 
-# --- Утилита для получения случайного мема ---
-import numpy as np
-
-# Глобальные переменные
-MEME_INDEX = 0
-MEME_ORDER = []
-
+# --- Подготовка и выбор случайного мема ---
 def prepare_meme_order():
     global MEME_ORDER, MEME_INDEX
     MEME_ORDER = np.random.permutation(len(MEMES_LIST)).tolist()
@@ -57,33 +65,28 @@ def prepare_meme_order():
 
 def get_random_meme():
     global MEME_INDEX, MEME_ORDER
-
     if not MEMES_LIST:
         return None
-
     if not MEME_ORDER or MEME_INDEX >= len(MEME_ORDER):
         prepare_meme_order()
-
     meme_idx = MEME_ORDER[MEME_INDEX]
     MEME_INDEX += 1
     return MEMES_LIST[meme_idx]
 
-import zipfile
-import tempfile
-
+# --- Экспорт мемов в zip ---
 def create_memes_zip():
     temp_zip = tempfile.NamedTemporaryFile(delete=False, suffix=".zip")
     with zipfile.ZipFile(temp_zip.name, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for filename in os.listdir(MEMES_FOLDER):
-            filepath = os.path.join(MEMES_FOLDER, filename)
+            filepath = MEMES_FOLDER + "/" + filename
             if os.path.isfile(filepath):
                 zipf.write(filepath, arcname=filename)
     return temp_zip.name
 
+# --- Команды ---
 async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     username = f"{user.username}" if user.username else user.name
-
     if username in list(ADMINS):
         zip_path = create_memes_zip()
         try:
@@ -92,29 +95,19 @@ async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
             os.remove(zip_path)
     else:
         await update.message.reply_text("⛔ Эта команда доступна только администраторам.")
-        return
 
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
     count = len(MEMES_LIST)
     await update.message.reply_text(f"Сейчас доступно {count} мемов.")
 
-# --- Проверка админа ---
 def is_admin(username: str):
-    print(username)
-    print(ADMINS)
     return username in ADMINS
 
-# --- Сброс мемов дня (если дата изменилась) ---
 def reset_memes_day_if_needed():
     today = datetime.date.today()
-    to_delete = []
-    for user_id, (fname, dt) in MEMES_DAY.items():
-        if dt != today:
-            to_delete.append(user_id)
+    to_delete = [user_id for user_id, (fname, dt) in MEMES_DAY.items() if dt != today]
     for user_id in to_delete:
         del MEMES_DAY[user_id]
-
-# --- Обработчики команд ---
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -122,18 +115,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Команды:\n"
         "/random_meme - случайный мем\n"
         "/meme_of_the_day - мем дня\n"
-        "В личке можно прислать мем, чтобы добавить в библиотеку.\n"
-        #"Админы могут использовать /lock_mem_add и /unlock_mem_add."
+        "В личке можно прислать мем, чтобы добавить в библиотеку."
     )
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Привет! Я бот для мемов.\n"
         "Команды:\n"
         "/random_meme - случайный мем\n"
         "/meme_of_the_day - мем дня\n"
-        "В личке можно прислать мем, чтобы добавить в библиотеку.\n"
-        "Админы могут использовать /lock_mem_add и /unlock_mem_add."
+        "/meme_count - количество мемов\n"
+        "/export_memes - экспортировать все мемы (только для админов)"
     )
 
 async def random_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -141,58 +132,53 @@ async def random_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not meme_file:
         await update.message.reply_text("Мемы не найдены :(")
         return
-    path = os.path.join(MEMES_FOLDER, meme_file)
+    path = MEMES_FOLDER + "/" + meme_file
     await update.message.reply_photo(photo=open(path, 'rb'))
 
 async def meme_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Мем дня для каждого пользователя"""
     reset_memes_day_if_needed()
     user_id = update.effective_user.id
     today = datetime.date.today()
     if user_id in MEMES_DAY:
         fname, dt = MEMES_DAY[user_id]
         if dt == today:
-            path = os.path.join(MEMES_FOLDER, fname)
+            path = MEMES_FOLDER + "/" + fname
             await update.message.reply_photo(photo=open(path, 'rb'))
             return
-    # Нужно выбрать новый мем
     meme_file = get_random_meme()
     if not meme_file:
         await update.message.reply_text("Мемы не найдены :(")
         return
     MEMES_DAY[user_id] = (meme_file, today)
-    path = os.path.join(MEMES_FOLDER, meme_file)
+    path = MEMES_FOLDER + "/" + meme_file
     await update.message.reply_photo(photo=open(path, 'rb'))
 
 async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
     user = update.effective_user
     chat = update.effective_chat
-
-    # Проверяем, что это личка
     if chat.type != 'private':
         return
-
-    # Проверяем права на добавление мемов
     if not is_admin(user.username) and not ALLOW_USER_ADD:
         await update.message.reply_text("Добавление мемов отключено для обычных пользователей.")
         return
-
     if not update.message.photo:
         await update.message.reply_text("Пожалуйста, отправьте мем в виде картинки.")
         return
-
-    photo = update.message.photo[-1]  # Берем самое лучшее качество
+    photo = update.message.photo[-1]
     file = await photo.get_file()
-    # Генерируем уникальное имя
-    ext = os.path.splitext(file.file_path)[1]
+    ext = ".jpg"
     filename = f"{user.id}_{int(datetime.datetime.now().timestamp())}{ext}"
-    save_path = os.path.join(MEMES_FOLDER, filename)
-    await file.download_to_drive(save_path)
-
-    MEMES_LIST.append(filename)
-
-    await update.message.reply_text("Мем успешно добавлен! Спасибо 😊")
+    save_path = MEMES_FOLDER + "/" + filename
+    try:
+        await file.download_to_drive(save_path)
+        logger.info(f"Saved meme to {save_path}")
+    except Exception as e:
+        logger.error(f"Failed to save meme: {e}")
+        await update.message.reply_text("❌ Ошибка при сохранении мема.")
+        return
+    load_memes_list()
+    await update.message.reply_text("✅ Мем успешно добавлен! Спасибо 😊")
 
 async def lock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
@@ -212,30 +198,13 @@ async def unlock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ALLOW_USER_ADD = True
     await update.message.reply_text("Добавление мемов разрешено для всех.")
 
-# --- Хендлеры команд в группе/беседе ---
-async def group_command_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text.lower()
-    if text.startswith('/random_meme'):
-        await random_meme(update, context)
-    elif text.startswith('/meme_of_the_day'):
-        await meme_of_the_day(update, context)
-
-
-# --- version ---
 async def version(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Версия бота: {BOT_VERSION}")
-
-# --- Основной запуск ---
-import asyncio
-import nest_asyncio
 
 async def main():
     load_config()
     load_memes_list()
-
     application = ApplicationBuilder().token(CONFIG['token']).build()
-
-    # Добавляем обработчики
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help))
     application.add_handler(CommandHandler("meme_count", meme_count))
@@ -245,22 +214,16 @@ async def main():
     application.add_handler(CommandHandler("unlock_mem_add", unlock_mem_add))
     application.add_handler(CommandHandler("export_memes", export_memes))
     application.add_handler(CommandHandler("version", version))
-    
-    # В группах — только команды случайного мема и мем дня
     application.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, add_meme))
-
     await application.initialize()
     await application.start()
     await application.updater.start_polling()
     print("Bot is running")
-
-    # Ждём Ctrl+C (работает в большинстве сред)
     try:
         while True:
             await asyncio.sleep(3600)
     except (KeyboardInterrupt, SystemExit):
         print("Stopping bot...")
-
     await application.updater.stop_polling()
     await application.stop()
     await application.shutdown()

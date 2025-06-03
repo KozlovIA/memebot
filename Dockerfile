@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir \
     python-telegram-bot==20.3 \
     pyyaml \
     nest_asyncio \
-    numpy
+    numpy \ 
 
 # Создаем папку для мемов, если её нет
 RUN mkdir -p ./memes
