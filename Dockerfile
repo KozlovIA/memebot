@@ -7,16 +7,20 @@ WORKDIR /app
 # Копируем файлы проекта в контейнер
 COPY . /app
 
-# Обновляем pip (опционально, но полезно)
+# Обновляем pip
 RUN pip install --upgrade pip
 
 # Устанавливаем зависимости
-RUN pip install --no-cache-dir python-telegram-bot==20.3 pyyaml nest_asyncio collections
+RUN pip install --no-cache-dir \
+    python-telegram-bot==20.3 \
+    pyyaml \
+    nest_asyncio \
+    numpy
 
-# Создаем папку для мемов, если её нет (опционально)
+# Создаем папку для мемов, если её нет
 RUN mkdir -p ./memes
 
-# Экспонируем переменную окружения для логов (если надо)
+# Экспонируем переменную окружения для логов
 ENV PYTHONUNBUFFERED=1
 
 # Запуск бота

@@ -66,6 +66,32 @@ def get_random_meme():
     MEME_INDEX += 1
     return MEMES_LIST[meme_idx]
 
+import zipfile
+import tempfile
+
+def create_memes_zip():
+    temp_zip = tempfile.NamedTemporaryFile(delete=False, suffix=".zip")
+    with zipfile.ZipFile(temp_zip.name, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for filename in os.listdir(MEMES_FOLDER):
+            filepath = os.path.join(MEMES_FOLDER, filename)
+            if os.path.isfile(filepath):
+                zipf.write(filepath, arcname=filename)
+    return temp_zip.name
+
+async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    username = f"{user.username}" if user.username else user.name
+
+    if username in list(ADMINS):
+        zip_path = create_memes_zip()
+        try:
+            await update.message.reply_document(document=open(zip_path, 'rb'), filename="memes.zip")
+        finally:
+            os.remove(zip_path)
+    else:
+        await update.message.reply_text("⛔ Эта команда доступна только администраторам.")
+        return
+
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
     count = len(MEMES_LIST)
     await update.message.reply_text(f"Сейчас доступно {count} мемов.")
@@ -210,6 +236,7 @@ async def main():
     application.add_handler(CommandHandler("meme_of_the_day", meme_of_the_day))
     application.add_handler(CommandHandler("lock_mem_add", lock_mem_add))
     application.add_handler(CommandHandler("unlock_mem_add", unlock_mem_add))
+    application.add_handler(CommandHandler("export_memes", export_memes))
 
     # В группах — только команды случайного мема и мем дня
     application.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, add_meme))
