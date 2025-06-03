@@ -7,6 +7,9 @@ WORKDIR /app
 # Копируем файлы проекта в контейнер
 COPY . /app
 
+# Обновляем pip (опционально, но полезно)
+RUN pip install --upgrade pip
+
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir python-telegram-bot==20.3 pyyaml nest_asyncio
 
