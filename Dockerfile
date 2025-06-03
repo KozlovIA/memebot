@@ -11,7 +11,7 @@ COPY . /app
 RUN pip install --upgrade pip
 
 # Устанавливаем зависимости
-RUN pip install --no-cache-dir python-telegram-bot==20.3 pyyaml nest_asyncio
+RUN pip install --no-cache-dir python-telegram-bot==20.3 pyyaml nest_asyncio collections
 
 # Создаем папку для мемов, если её нет (опционально)
 RUN mkdir -p ./memes

@@ -42,10 +42,18 @@ def load_memes_list():
     logger.info(f"Loaded {len(MEMES_LIST)} memes.")
 
 # --- Утилита для получения случайного мема ---
+from collections import deque
+import random
+
+MEME_QUEUE = deque()
+
 def get_random_meme():
-    if not MEMES_LIST:
-        return None
-    return random.choice(MEMES_LIST)
+    global MEME_QUEUE
+    if not MEME_QUEUE:
+        memes = MEMES_LIST.copy()
+        random.shuffle(memes)
+        MEME_QUEUE = deque(memes)
+    return MEME_QUEUE.popleft()
 
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
     count = len(MEMES_LIST)
