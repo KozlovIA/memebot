@@ -114,3 +114,311 @@
 2025-06-04 00:00:11,801 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendPhoto "HTTP/1.1 200 OK"
 2025-06-04 00:00:12,892 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
 2025-06-04 00:00:13,171 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendPhoto "HTTP/1.1 200 OK"
+2025-06-04 01:00:31,291 - __main__ - INFO - Config loaded. Memes folder: E:\ImportantFiles\PyProject\meme_bot/memes. Admins: {'igorexy', 'Igorexy'}
+2025-06-04 01:00:31,292 - __main__ - INFO - Loaded 20 memes.
+2025-06-04 01:00:31,866 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getMe "HTTP/1.1 200 OK"
+2025-06-04 01:00:31,867 - telegram.ext.Application - INFO - Application started
+2025-06-04 01:00:31,918 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/deleteWebhook "HTTP/1.1 200 OK"
+2025-06-04 01:00:42,052 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,053 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,224 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,362 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_56.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,407 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988050.jpg
+2025-06-04 01:00:50,407 - __main__ - INFO - Loaded 21 memes.
+2025-06-04 01:00:50,474 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,532 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,581 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_57.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,587 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988050.jpg
+2025-06-04 01:00:50,588 - __main__ - INFO - Loaded 21 memes.
+2025-06-04 01:00:50,654 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,714 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,768 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_58.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,808 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988050.jpg
+2025-06-04 01:00:50,809 - __main__ - INFO - Loaded 21 memes.
+2025-06-04 01:00:50,872 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:50,953 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,002 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_59.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,046 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988050.jpg
+2025-06-04 01:00:51,047 - __main__ - INFO - Loaded 21 memes.
+2025-06-04 01:00:51,117 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,163 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,214 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_30.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,215 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988051.jpg
+2025-06-04 01:00:51,216 - __main__ - INFO - Loaded 22 memes.
+2025-06-04 01:00:51,281 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,327 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,375 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_43.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,382 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988051.jpg
+2025-06-04 01:00:51,382 - __main__ - INFO - Loaded 22 memes.
+2025-06-04 01:00:51,449 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,541 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,589 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_2.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,599 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988051.jpg
+2025-06-04 01:00:51,600 - __main__ - INFO - Loaded 22 memes.
+2025-06-04 01:00:51,672 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,727 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,776 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_60.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,780 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988051.jpg
+2025-06-04 01:00:51,781 - __main__ - INFO - Loaded 22 memes.
+2025-06-04 01:00:51,846 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,892 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,941 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_5.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:51,958 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988051.jpg
+2025-06-04 01:00:51,960 - __main__ - INFO - Loaded 22 memes.
+2025-06-04 01:00:52,025 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,080 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,133 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_61.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,137 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988052.jpg
+2025-06-04 01:00:52,138 - __main__ - INFO - Loaded 23 memes.
+2025-06-04 01:00:52,203 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,251 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,299 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_8.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,309 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988052.jpg
+2025-06-04 01:00:52,310 - __main__ - INFO - Loaded 23 memes.
+2025-06-04 01:00:52,387 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,448 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,497 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_62.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,501 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988052.jpg
+2025-06-04 01:00:52,501 - __main__ - INFO - Loaded 23 memes.
+2025-06-04 01:00:52,569 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,616 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,665 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_10.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,673 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988052.jpg
+2025-06-04 01:00:52,674 - __main__ - INFO - Loaded 23 memes.
+2025-06-04 01:00:52,739 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,800 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,851 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_63.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,853 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988052.jpg
+2025-06-04 01:00:52,854 - __main__ - INFO - Loaded 23 memes.
+2025-06-04 01:00:52,917 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:52,978 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,027 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_64.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,040 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988052.jpg
+2025-06-04 01:00:53,041 - __main__ - INFO - Loaded 23 memes.
+2025-06-04 01:00:53,104 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,151 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,225 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_38.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,269 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988053.jpg
+2025-06-04 01:00:53,270 - __main__ - INFO - Loaded 24 memes.
+2025-06-04 01:00:53,338 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,384 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,433 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_40.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,440 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988053.jpg
+2025-06-04 01:00:53,442 - __main__ - INFO - Loaded 24 memes.
+2025-06-04 01:00:53,510 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,589 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,638 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_65.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,640 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988053.jpg
+2025-06-04 01:00:53,640 - __main__ - INFO - Loaded 24 memes.
+2025-06-04 01:00:53,707 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,793 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,846 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_66.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,847 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988053.jpg
+2025-06-04 01:00:53,848 - __main__ - INFO - Loaded 24 memes.
+2025-06-04 01:00:53,913 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:53,960 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,009 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_52.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,010 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988053.jpg
+2025-06-04 01:00:54,011 - __main__ - INFO - Loaded 24 memes.
+2025-06-04 01:00:54,076 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,134 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,183 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_67.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,187 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988054.jpg
+2025-06-04 01:00:54,188 - __main__ - INFO - Loaded 25 memes.
+2025-06-04 01:00:54,251 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,318 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,368 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_68.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,373 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988054.jpg
+2025-06-04 01:00:54,373 - __main__ - INFO - Loaded 25 memes.
+2025-06-04 01:00:54,444 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,501 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,550 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_69.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,560 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988054.jpg
+2025-06-04 01:00:54,562 - __main__ - INFO - Loaded 25 memes.
+2025-06-04 01:00:54,628 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,687 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,735 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_70.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,737 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988054.jpg
+2025-06-04 01:00:54,738 - __main__ - INFO - Loaded 25 memes.
+2025-06-04 01:00:54,804 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,858 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,907 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_12.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:54,912 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988054.jpg
+2025-06-04 01:00:54,914 - __main__ - INFO - Loaded 25 memes.
+2025-06-04 01:00:54,977 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,054 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,108 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_71.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,109 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988055.jpg
+2025-06-04 01:00:55,109 - __main__ - INFO - Loaded 26 memes.
+2025-06-04 01:00:55,175 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,222 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,273 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_15.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,373 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988055.jpg
+2025-06-04 01:00:55,374 - __main__ - INFO - Loaded 26 memes.
+2025-06-04 01:00:55,438 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,493 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,544 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_72.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,547 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988055.jpg
+2025-06-04 01:00:55,548 - __main__ - INFO - Loaded 26 memes.
+2025-06-04 01:00:55,618 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,665 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,715 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_18.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,857 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988055.jpg
+2025-06-04 01:00:55,858 - __main__ - INFO - Loaded 26 memes.
+2025-06-04 01:00:55,923 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:55,980 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,030 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_73.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,045 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988055.jpg
+2025-06-04 01:00:56,046 - __main__ - INFO - Loaded 26 memes.
+2025-06-04 01:00:56,111 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,157 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,227 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_25.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,230 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988056.jpg
+2025-06-04 01:00:56,232 - __main__ - INFO - Loaded 27 memes.
+2025-06-04 01:00:56,298 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,356 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,413 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_74.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,422 - __main__ - ERROR - Failed to save meme: [Errno 13] Permission denied: 'E:\\ImportantFiles\\PyProject\\meme_bot\\memes\\249850828_1748988056.jpg'
+2025-06-04 01:00:56,487 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,535 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,585 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_22.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,590 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988056.jpg
+2025-06-04 01:00:56,591 - __main__ - INFO - Loaded 27 memes.
+2025-06-04 01:00:56,655 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,722 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,958 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_75.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:56,959 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988056.jpg
+2025-06-04 01:00:56,960 - __main__ - INFO - Loaded 27 memes.
+2025-06-04 01:00:57,039 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,088 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,142 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_26.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,145 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988057.jpg
+2025-06-04 01:00:57,147 - __main__ - INFO - Loaded 28 memes.
+2025-06-04 01:00:57,221 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,277 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,326 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_76.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,332 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988057.jpg
+2025-06-04 01:00:57,334 - __main__ - INFO - Loaded 28 memes.
+2025-06-04 01:00:57,403 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,452 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,504 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_28.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,508 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988057.jpg
+2025-06-04 01:00:57,509 - __main__ - INFO - Loaded 28 memes.
+2025-06-04 01:00:57,578 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,659 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,710 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_77.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,712 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988057.jpg
+2025-06-04 01:00:57,713 - __main__ - INFO - Loaded 28 memes.
+2025-06-04 01:00:57,779 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,829 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,883 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_33.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:57,890 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988057.jpg
+2025-06-04 01:00:57,891 - __main__ - INFO - Loaded 28 memes.
+2025-06-04 01:00:57,955 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,032 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,088 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_78.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,097 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988058.jpg
+2025-06-04 01:00:58,097 - __main__ - INFO - Loaded 29 memes.
+2025-06-04 01:00:58,164 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,214 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,264 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_24.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,309 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988058.jpg
+2025-06-04 01:00:58,310 - __main__ - INFO - Loaded 29 memes.
+2025-06-04 01:00:58,392 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,475 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,527 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_79.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,534 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988058.jpg
+2025-06-04 01:00:58,535 - __main__ - INFO - Loaded 29 memes.
+2025-06-04 01:00:58,602 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,649 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,699 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_35.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,710 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988058.jpg
+2025-06-04 01:00:58,711 - __main__ - INFO - Loaded 29 memes.
+2025-06-04 01:00:58,779 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,827 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,876 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_39.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:00:58,879 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988058.jpg
+2025-06-04 01:00:58,879 - __main__ - INFO - Loaded 29 memes.
+2025-06-04 01:00:58,946 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:01:00,109 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:01:10,154 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:01:20,199 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:01:25,182 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:01:25,332 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getFile "HTTP/1.1 200 OK"
+2025-06-04 01:01:25,382 - httpx - INFO - HTTP Request: GET https://api.telegram.org/file/bot7794647295%3AAAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/photos/file_80.jpg "HTTP/1.1 200 OK"
+2025-06-04 01:01:25,467 - __main__ - INFO - Saved meme to E:\ImportantFiles\PyProject\meme_bot/memes/249850828_1748988085.jpg
+2025-06-04 01:01:25,468 - __main__ - INFO - Loaded 30 memes.
+2025-06-04 01:01:25,553 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 01:01:35,228 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:01:45,271 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:01:55,318 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:02:05,363 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:02:15,408 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:02:25,457 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:02:35,507 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:02:45,553 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:02:55,603 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:03:05,658 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:03:15,704 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:03:25,748 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:03:35,792 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:03:45,835 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:03:55,888 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:04:05,934 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:04:15,980 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:04:26,029 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:04:36,072 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:04:46,113 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:04:56,159 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:05:06,208 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:05:16,251 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:05:26,296 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:05:36,337 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:05:46,380 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:05:56,424 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:06:06,468 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:06:16,514 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:06:26,562 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:06:36,609 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:06:46,653 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:06:56,696 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:07:06,741 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:07:16,787 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:07:26,834 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:07:36,884 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:07:46,927 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:07:56,974 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:08:07,018 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:08:17,064 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:08:27,109 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:08:37,151 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:08:47,194 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 01:08:57,238 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:13:15,036 - __main__ - INFO - Config loaded. Memes folder: E:\ImportantFiles\PyProject\meme_bot/memes. Admins: {'Igorexy', 'igorexy'}
+2025-06-04 20:13:15,039 - __main__ - INFO - Loaded 26 memes.
+2025-06-04 20:13:16,576 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getMe "HTTP/1.1 200 OK"
+2025-06-04 20:13:16,579 - telegram.ext.Application - INFO - Application started
+2025-06-04 20:13:16,626 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/deleteWebhook "HTTP/1.1 200 OK"
+2025-06-04 20:13:27,060 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:13:30,452 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:13:31,011 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendMessage "HTTP/1.1 200 OK"
+2025-06-04 20:13:40,505 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:13:43,024 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:13:44,184 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/sendDocument "HTTP/1.1 200 OK"
+2025-06-04 20:13:44,186 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "c:\Users\Igorexy\anaconda3\Lib\site-packages\telegram\ext\_application.py", line 1124, in process_update
+    await coroutine
+  File "c:\Users\Igorexy\anaconda3\Lib\site-packages\telegram\ext\_handler.py", line 141, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\ImportantFiles\PyProject\meme_bot\bot.py", line 95, in export_memes
+    os.remove(zip_path)
+PermissionError: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: 'C:\\Users\\Igorexy\\AppData\\Local\\Temp\\tmpsj_5wdvy.zip'
+2025-06-04 20:13:53,206 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:14:03,260 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:14:13,313 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:14:23,368 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:14:33,421 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:14:43,468 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"
+2025-06-04 20:14:53,514 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot7794647295:AAGmpF0KLUeo1FeS6C4bMQghYqtW7D6FIJI/getUpdates "HTTP/1.1 200 OK"

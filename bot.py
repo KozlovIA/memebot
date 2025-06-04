@@ -90,15 +90,15 @@ async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if username in list(ADMINS):
         zip_path = create_memes_zip()
         try:
-            await update.message.reply_document(document=open(zip_path, 'rb'), filename="memes.zip")
+            await update.message.reply_document(document=open(zip_path, 'rb'), filename="memes.zip", disable_notification=True)
         finally:
             os.remove(zip_path)
     else:
-        await update.message.reply_text("⛔ Эта команда доступна только администраторам.")
+        await update.message.reply_text("⛔ Эта команда доступна только администраторам.", disable_notification=True)
 
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
     count = len(MEMES_LIST)
-    await update.message.reply_text(f"Сейчас доступно {count} мемов.")
+    await update.message.reply_text(f"Сейчас доступно {count} мемов.", disable_notification=True)
 
 def is_admin(username: str):
     return username in ADMINS
@@ -115,7 +115,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Команды:\n"
         "/random_meme - случайный мем\n"
         "/meme_of_the_day - мем дня\n"
-        "В личке можно прислать мем, чтобы добавить в библиотеку."
+        "В личке можно прислать мем, чтобы добавить в библиотеку.",
+        disable_notification=True
     )
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -124,16 +125,17 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/random_meme - случайный мем\n"
         "/meme_of_the_day - мем дня\n"
         "/meme_count - количество мемов\n"
-        "/export_memes - экспортировать все мемы (только для админов)"
+        "/export_memes - экспортировать все мемы (только для админов)",
+        disable_notification=True
     )
 
 async def random_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
     meme_file = get_random_meme()
     if not meme_file:
-        await update.message.reply_text("Мемы не найдены :(")
+        await update.message.reply_text("Мемы не найдены :(", disable_notification=True)
         return
     path = MEMES_FOLDER + "/" + meme_file
-    await update.message.reply_photo(photo=open(path, 'rb'))
+    await update.message.reply_photo(photo=open(path, 'rb'), disable_notification=True)
 
 async def meme_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reset_memes_day_if_needed()
@@ -143,15 +145,15 @@ async def meme_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
         fname, dt = MEMES_DAY[user_id]
         if dt == today:
             path = MEMES_FOLDER + "/" + fname
-            await update.message.reply_photo(photo=open(path, 'rb'))
+            await update.message.reply_photo(photo=open(path, 'rb'), disable_notification=True)
             return
     meme_file = get_random_meme()
     if not meme_file:
-        await update.message.reply_text("Мемы не найдены :(")
+        await update.message.reply_text("Мемы не найдены :(", disable_notification=True)
         return
     MEMES_DAY[user_id] = (meme_file, today)
     path = MEMES_FOLDER + "/" + meme_file
-    await update.message.reply_photo(photo=open(path, 'rb'))
+    await update.message.reply_photo(photo=open(path, 'rb'), disable_notification=True)
 
 async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
@@ -160,10 +162,10 @@ async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if chat.type != 'private':
         return
     if not is_admin(user.username) and not ALLOW_USER_ADD:
-        await update.message.reply_text("Добавление мемов отключено для обычных пользователей.")
+        await update.message.reply_text("Добавление мемов отключено для обычных пользователей.", disable_notification=True)
         return
     if not update.message.photo:
-        await update.message.reply_text("Пожалуйста, отправьте мем в виде картинки.")
+        await update.message.reply_text("Пожалуйста, отправьте мем в виде картинки.", disable_notification=True)
         return
     photo = update.message.photo[-1]
     file = await photo.get_file()
@@ -175,31 +177,31 @@ async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.info(f"Saved meme to {save_path}")
     except Exception as e:
         logger.error(f"Failed to save meme: {e}")
-        await update.message.reply_text("❌ Ошибка при сохранении мема.")
+        await update.message.reply_text("❌ Ошибка при сохранении мема.", disable_notification=True)
         return
     load_memes_list()
-    await update.message.reply_text("✅ Мем успешно добавлен! Спасибо 😊")
+    await update.message.reply_text("✅ Мем успешно добавлен! Спасибо 😊", disable_notification=True)
 
 async def lock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
     user = update.effective_user
     if not is_admin(user.username):
-        await update.message.reply_text("Команда доступна только администраторам.")
+        await update.message.reply_text("Команда доступна только администраторам.", disable_notification=True)
         return
     ALLOW_USER_ADD = False
-    await update.message.reply_text("Добавление мемов отключено для обычных пользователей.")
+    await update.message.reply_text("Добавление мемов отключено для обычных пользователей.", disable_notification=True)
 
 async def unlock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
     user = update.effective_user
     if not is_admin(user.username):
-        await update.message.reply_text("Команда доступна только администраторам.")
+        await update.message.reply_text("Команда доступна только администраторам.", disable_notification=True)
         return
     ALLOW_USER_ADD = True
-    await update.message.reply_text("Добавление мемов разрешено для всех.")
+    await update.message.reply_text("Добавление мемов разрешено для всех.", disable_notification=True)
 
 async def version(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(f"Версия бота: {BOT_VERSION}")
+    await update.message.reply_text(f"Версия бота: {BOT_VERSION}", disable_notification=True)
 
 async def main():
     load_config()
