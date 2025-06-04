@@ -11,7 +11,7 @@ import tempfile
 import asyncio
 import nest_asyncio
 
-BOT_VERSION = "v1.0.2: disable_notification"
+BOT_VERSION = "v2.0.0: can add more than 1 meme"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log.log"
