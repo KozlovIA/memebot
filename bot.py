@@ -11,7 +11,7 @@ import tempfile
 import asyncio
 import nest_asyncio
 
-BOT_VERSION = "v1.0.1"
+BOT_VERSION = "v1.0.2: disable_notification"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log.log"
