@@ -159,28 +159,68 @@ async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
     user = update.effective_user
     chat = update.effective_chat
+
     if chat.type != 'private':
         return
+
     if not is_admin(user.username) and not ALLOW_USER_ADD:
         await update.message.reply_text("Добавление мемов отключено для обычных пользователей.", disable_notification=True)
         return
+
     if not update.message.photo:
         await update.message.reply_text("Пожалуйста, отправьте мем в виде картинки.", disable_notification=True)
         return
-    photo = update.message.photo[-1]
-    file = await photo.get_file()
-    ext = ".jpg"
-    filename = f"{user.id}_{int(datetime.datetime.now().timestamp())}{ext}"
-    save_path = MEMES_FOLDER + "/" + filename
-    try:
-        await file.download_to_drive(save_path)
-        logger.info(f"Saved meme to {save_path}")
-    except Exception as e:
-        logger.error(f"Failed to save meme: {e}")
-        await update.message.reply_text("❌ Ошибка при сохранении мема.", disable_notification=True)
-        return
-    load_memes_list()
-    await update.message.reply_text("✅ Мем успешно добавлен! Спасибо 😊", disable_notification=True)
+
+    media_group_id = update.message.media_group_id
+
+    if media_group_id:
+        # Инициализация списка для хранения всех фото из альбома
+        if "pending_photos" not in context.chat_data:
+            context.chat_data["pending_photos"] = {}
+        if media_group_id not in context.chat_data["pending_photos"]:
+            context.chat_data["pending_photos"][media_group_id] = []
+
+        # Сохраняем фото во временный список
+        context.chat_data["pending_photos"][media_group_id].append(update.message)
+
+        # Подождём, пока придут все фото (альбом отправляется не сразу)
+        await asyncio.sleep(1.5)
+
+        # Если это последнее сообщение из группы, сохраняем все фото
+        photo_msgs = context.chat_data["pending_photos"].pop(media_group_id, [])
+        saved_count = 0
+
+        for msg in photo_msgs:
+            photo = msg.photo[-1]
+            file = await photo.get_file()
+            ext = ".jpg"
+            filename = f"{user.id}_{int(datetime.datetime.now().timestamp())}_{saved_count}{ext}"
+            save_path = os.path.join(MEMES_FOLDER, filename)
+            try:
+                await file.download_to_drive(save_path)
+                logger.info(f"Saved meme from album to {save_path}")
+                saved_count += 1
+            except Exception as e:
+                logger.error(f"Failed to save meme from album: {e}")
+
+        load_memes_list()
+        await update.message.reply_text(f"✅ Добавлено {saved_count} мемов из альбома. Спасибо 😊", disable_notification=True)
+    else:
+        # Одиночное изображение
+        photo = update.message.photo[-1]
+        file = await photo.get_file()
+        ext = ".jpg"
+        filename = f"{user.id}_{int(datetime.datetime.now().timestamp())}{ext}"
+        save_path = os.path.join(MEMES_FOLDER, filename)
+        try:
+            await file.download_to_drive(save_path)
+            logger.info(f"Saved meme to {save_path}")
+        except Exception as e:
+            logger.error(f"Failed to save meme: {e}")
+            await update.message.reply_text("❌ Ошибка при сохранении мема.", disable_notification=True)
+            return
+        load_memes_list()
+        await update.message.reply_text("✅ Мем успешно добавлен! Спасибо 😊", disable_notification=True)
 
 async def lock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
