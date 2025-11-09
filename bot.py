@@ -104,14 +104,27 @@ def prepare_meme_order():
     MEME_INDEX = 0
 
 def get_random_meme():
-    global MEME_INDEX, MEME_ORDER
+    """Возвращает случайный мем из актуальной папки с мемами."""
+    global MEME_ORDER, MEME_INDEX, MEMES_LIST
+
+    # Обновляем список мемов на каждый вызов
+    MEMES_LIST = [
+        f for f in os.listdir(MEMES_FOLDER)
+        if os.path.isfile(os.path.join(MEMES_FOLDER, f)) and f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))
+    ]
+
     if not MEMES_LIST:
         return None
+
+    # Если порядок ещё не сформирован или индекс превышен, перемешиваем
     if not MEME_ORDER or MEME_INDEX >= len(MEME_ORDER):
-        prepare_meme_order()
+        MEME_ORDER = np.random.permutation(len(MEMES_LIST)).tolist()
+        MEME_INDEX = 0
+
     meme_idx = MEME_ORDER[MEME_INDEX]
     MEME_INDEX += 1
     return MEMES_LIST[meme_idx]
+
 
 # --- Экспорт мемов в zip ---
 def create_memes_zip():
@@ -198,19 +211,29 @@ async def meme_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reset_memes_day_if_needed()
     user_id = update.effective_user.id
     today = datetime.date.today()
+
     if user_id in MEMES_DAY:
         fname, dt = MEMES_DAY[user_id]
         if dt == today:
-            path = MEMES_FOLDER + "/" + fname
-            await update.message.reply_photo(photo=open(path, 'rb'), disable_notification=True)
-            return
+            path = os.path.join(MEMES_FOLDER, fname)
+            if os.path.exists(path):
+                with open(path, 'rb') as f:
+                    await update.message.reply_photo(photo=f, disable_notification=True)
+                return
+            else:
+                del MEMES_DAY[user_id]
+
     meme_file = get_random_meme()
     if not meme_file:
         await update.message.reply_text("Мемы не найдены :(", disable_notification=True)
         return
+
     MEMES_DAY[user_id] = (meme_file, today)
-    path = MEMES_FOLDER + "/" + meme_file
-    await update.message.reply_photo(photo=open(path, 'rb'), disable_notification=True)
+    path = os.path.join(MEMES_FOLDER, meme_file)
+    with open(path, 'rb') as f:
+        await update.message.reply_photo(photo=f, disable_notification=True)
+
+
 
 async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global ALLOW_USER_ADD
