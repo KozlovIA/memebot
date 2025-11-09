@@ -323,7 +323,7 @@ async def control_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if CONTROL_PANEL_URL:
-        url = CONTROL_PANEL_URL
+        url = f"http://{CONTROL_PANEL_URL}:{CONTROL_PANEL_PORT}"
     else:
         server_ip = SERVER_IP
         if server_ip:
