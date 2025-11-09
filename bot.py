@@ -10,11 +10,13 @@ import zipfile
 import tempfile
 import asyncio
 import nest_asyncio
+import socket
+import requests
 
-BOT_VERSION = "v2.0.0: can add more than 1 meme"
+BOT_VERSION = "v3.0.0: control panel"
 
 # --- Логирование ---
-LOG_FILE = os.getcwd() + "/log.log"
+LOG_FILE = os.getcwd() + "/log/log.log"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,6 +30,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # --- Глобальные переменные ---
+CONFIG_PATH = os.path.join(os.getcwd(), "config.yaml")
+EDITORS = set()
+CONTROL_PANEL_URL = None
+CONTROL_PANEL_PORT = 7860
 CONFIG = {}
 MEMES_FOLDER = ""
 ADMINS = set()
@@ -37,16 +43,50 @@ MEMES_LIST = []
 MEME_INDEX = 0
 MEME_ORDER = []
 
+
+def get_server_ip():
+    try:
+        # Пробуем получить внешний IP (если есть интернет)
+        return requests.get("https://api.ipify.org").text
+    except Exception:
+        # fallback — локальный IP
+        return socket.gethostbyname(socket.gethostname())
+
+SERVER_IP = get_server_ip()
+
 # --- Чтение конфига ---
-def load_config(path=os.getcwd() + "/config.yaml"):
-    global CONFIG, MEMES_FOLDER, ADMINS
+def save_config(path=CONFIG_PATH):
+    """Сохраняет CONFIG обратно в файл (используется при добавлении editors)."""
+    try:
+        with open(path, 'w', encoding='utf-8') as f:
+            yaml.safe_dump(CONFIG, f, allow_unicode=True)
+        logger.info("Config saved.")
+    except Exception as e:
+        logger.error(f"Failed to save config: {e}")
+
+# --- Обновление конфига ---
+def load_config(path=CONFIG_PATH):
+    global CONFIG, MEMES_FOLDER, ADMINS, EDITORS, CONTROL_PANEL_URL, CONTROL_PANEL_PORT
     with open(path, 'r', encoding='utf-8') as f:
-        CONFIG = yaml.safe_load(f)
+        CONFIG = yaml.safe_load(f) or {}
     MEMES_FOLDER = os.getcwd() + CONFIG.get('memes_folder', '/memes')
     ADMINS.update(CONFIG.get('admins', []))
+    EDITORS.update(CONFIG.get('editors', []))
+    CONTROL_PANEL_URL = CONFIG.get('control_panel_url', "") or None
+    CONTROL_PANEL_PORT = CONFIG.get('control_panel_port', 7860)
     if not os.path.exists(MEMES_FOLDER):
         os.makedirs(MEMES_FOLDER)
-    logger.info(f"Config loaded. Memes folder: {MEMES_FOLDER}. Admins: {ADMINS}")
+    logger.info(f"Config loaded. Memes folder: {MEMES_FOLDER}. Admins: {ADMINS}. Editors: {EDITORS}")
+
+# --- Проверки прав ---
+def is_admin(username: str) -> bool:
+    return username in ADMINS
+
+def is_editor(username: str) -> bool:
+    return username in EDITORS
+
+def is_admin_or_editor(username: str) -> bool:
+    return is_admin(username) or is_editor(username)
 
 # --- Загрузка списка мемов ---
 def load_memes_list():
@@ -119,13 +159,30 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         disable_notification=True
     )
 
+# --- Справка для обычных пользователей ---
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Команды:\n"
         "/random_meme - случайный мем\n"
         "/meme_of_the_day - мем дня\n"
         "/meme_count - количество мемов\n"
-        "/export_memes - экспортировать все мемы (только для админов)",
+        "/help_admins - "
+        "В личке можно прислать мем, чтобы добавить в библиотеку.",
+        disable_notification=True
+    )
+
+
+# --- Справка для админов и редакторов ---
+async def help_admins(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "Админские и редакторские команды:\n"
+        "/export_memes - экспортировать все мемы\n"
+        "/add_editor <username> - добавить редактора\n"
+        "/remove_editor <username> - удалить редактора\n"
+        "/control_panel - ссылка на панель мемов\n"
+        "/lock_mem_add - запретить добавление мемов пользователям\n"
+        "/unlock_mem_add - разрешить добавление мемов пользователям\n"
+        "/version - версия бота",
         disable_notification=True
     )
 
@@ -243,12 +300,97 @@ async def unlock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def version(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Версия бота: {BOT_VERSION}", disable_notification=True)
 
+
+# --- Панель управления мемами ---
+async def control_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    chat = update.effective_chat
+    username = user.username if user.username else user.name
+
+    # разрешаем только в личке
+    if chat.type != 'private':
+        await update.message.reply_text(
+            "ℹ️ Команда доступна только в личных сообщениях. Пожалуйста, напишите боту в ЛС.",
+            disable_notification=True
+        )
+        return
+
+    if not is_admin_or_editor(username):
+        await update.message.reply_text(
+            "⛔ Эта команда доступна только администраторам и редакторам.",
+            disable_notification=True
+        )
+        return
+
+    if CONTROL_PANEL_URL:
+        url = CONTROL_PANEL_URL
+    else:
+        server_ip = SERVER_IP
+        if server_ip:
+            url = f"http://{server_ip}:{CONTROL_PANEL_PORT}"
+        else:
+            url = f"http://<SERVER_IP>:{CONTROL_PANEL_PORT}  (укажи SERVER_IP или control_panel_url в config.yaml)"
+
+    await update.message.reply_text(
+        f"[Панель управления мемами]({url})",
+        disable_notification=True,
+        parse_mode='Markdown'
+    )
+
+
+# --- Добавление редакторов ---
+async def add_editor_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    username = user.username if user.username else user.name
+    if not is_admin(username):
+        await update.message.reply_text("⛔ Команда доступна только администраторам.", disable_notification=True)
+        return
+
+    args = context.args
+    if not args:
+        await update.message.reply_text("Использование: /add_editor <username> (без @).", disable_notification=True)
+        return
+    new_editor = args[0].lstrip("@")
+    if new_editor in EDITORS:
+        await update.message.reply_text(f"{new_editor} уже в списке editors.", disable_notification=True)
+        return
+
+    EDITORS.add(new_editor)
+    CONFIG['editors'] = sorted(list(EDITORS))
+    save_config()
+    await update.message.reply_text(f"✅ Пользователь {new_editor} добавлен в editors.", disable_notification=True)
+
+
+# --- Удаление редакторов ---
+async def remove_editor_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    username = user.username if user.username else user.name
+    if not is_admin(username):
+        await update.message.reply_text("⛔ Команда доступна только администраторам.", disable_notification=True)
+        return
+
+    args = context.args
+    if not args:
+        await update.message.reply_text("Использование: /remove_editor <username> (без @).", disable_notification=True)
+        return
+    editor_to_remove = args[0].lstrip("@")
+    if editor_to_remove not in EDITORS:
+        await update.message.reply_text(f"{editor_to_remove} не найден в списке editors.", disable_notification=True)
+        return
+
+    EDITORS.remove(editor_to_remove)
+    CONFIG['editors'] = sorted(list(EDITORS))
+    save_config()
+    await update.message.reply_text(f"✅ Пользователь {editor_to_remove} удалён из editors.", disable_notification=True)
+
+
 async def main():
     load_config()
     load_memes_list()
     application = ApplicationBuilder().token(CONFIG['token']).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help))
+    application.add_handler(CommandHandler("help_admins", help_admins))
     application.add_handler(CommandHandler("meme_count", meme_count))
     application.add_handler(CommandHandler("random_meme", random_meme))
     application.add_handler(CommandHandler("meme_of_the_day", meme_of_the_day))
@@ -256,6 +398,9 @@ async def main():
     application.add_handler(CommandHandler("unlock_mem_add", unlock_mem_add))
     application.add_handler(CommandHandler("export_memes", export_memes))
     application.add_handler(CommandHandler("version", version))
+    application.add_handler(CommandHandler("add_editor", add_editor_cmd))
+    application.add_handler(CommandHandler("remove_editor", remove_editor_cmd))
+    application.add_handler(CommandHandler("control_panel", control_panel))
     application.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, add_meme))
     await application.initialize()
     await application.start()

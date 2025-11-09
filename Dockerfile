@@ -1,26 +1,36 @@
-# Используем официальный Python-образ
+# Используем официальный Python slim
 FROM python:3.11-slim
 
-# Устанавливаем рабочую директорию внутри контейнера
+# Устанавливаем зависимости системы
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем файлы проекта в контейнер
-COPY . /app
+# Копируем файлы проекта
+COPY requirements.txt .
+COPY bot.py .
+COPY control_panel_ui.py .
+COPY memes ./memes
+COPY config.yaml .
 
-# Обновляем pip
-RUN pip install --upgrade pip
+# Устанавливаем зависимости Python
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir \
-    python-telegram-bot==20.3 \
-    pyyaml \
-    nest_asyncio \
-    numpy 
-# Создаем папку для мемов, если её нет
-RUN mkdir -p /memes
+# Создаем папку для логов
+RUN mkdir -p log
 
-# Экспонируем переменную окружения для логов
-ENV PYTHONUNBUFFERED=1
+# Устанавливаем tini для корректного управления процессами
+RUN apt-get update && apt-get install -y tini && rm -rf /var/lib/apt/lists/*
 
-# Запуск бота
-CMD ["python", "bot.py"]
+# Экспонируем порты для бота и панели
+EXPOSE 8501  
+# порт Flask
+# Телеграм бот не требует открытого порта, он сам опрашивает API
+
+# Запуск обоих скриптов через bash
+# & ставит bot.py в фон, а затем запускает Flask в переднем плане
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["bash", "-c", "python bot.py & python control_panel_ui.py"]

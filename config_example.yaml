@@ -1,5 +1,8 @@
-token: ""
 admins:
-  - ""
-  - ""
-memes_folder: "./memes"
+- ''
+editors:
+- ''
+control_panel_port: 8501
+control_panel_url: ''
+memes_folder: /memes
+token: ""
