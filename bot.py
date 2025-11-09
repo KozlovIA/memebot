@@ -105,9 +105,9 @@ def prepare_meme_order():
 
 def get_random_meme():
     """Возвращает случайный мем из актуальной папки с мемами."""
-    global MEME_ORDER, MEME_INDEX, MEMES_LIST
+    global MEME_ORDER, MEME_INDEX, MEMES_LIST, LAST_MEMES_COUNT
 
-    # Обновляем список мемов на каждый вызов
+    # Обновляем список мемов
     MEMES_LIST = [
         f for f in os.listdir(MEMES_FOLDER)
         if os.path.isfile(os.path.join(MEMES_FOLDER, f)) and f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))
@@ -116,8 +116,14 @@ def get_random_meme():
     if not MEMES_LIST:
         return None
 
-    # Если порядок ещё не сформирован или индекс превышен, перемешиваем
-    if not MEME_ORDER or MEME_INDEX >= len(MEME_ORDER):
+    # Сбрасываем порядок, если длина списка изменилась
+    if 'LAST_MEMES_COUNT' not in globals() or LAST_MEMES_COUNT != len(MEMES_LIST):
+        MEME_ORDER = np.random.permutation(len(MEMES_LIST)).tolist()
+        MEME_INDEX = 0
+        LAST_MEMES_COUNT = len(MEMES_LIST)
+
+    # Если порядок закончился — снова перемешиваем
+    if MEME_INDEX >= len(MEMES_LIST):
         MEME_ORDER = np.random.permutation(len(MEMES_LIST)).tolist()
         MEME_INDEX = 0
 
@@ -150,6 +156,10 @@ async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⛔ Эта команда доступна только администраторам.", disable_notification=True)
 
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    MEMES_LIST = [
+        f for f in os.listdir(MEMES_FOLDER)
+        if os.path.isfile(os.path.join(MEMES_FOLDER, f)) and f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))
+    ]
     count = len(MEMES_LIST)
     await update.message.reply_text(f"Сейчас доступно {count} мемов.", disable_notification=True)
 
