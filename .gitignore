@@ -1,5 +1,5 @@
 config.yaml
-*.txt*
+prompts
 log
 images
 memes_short
