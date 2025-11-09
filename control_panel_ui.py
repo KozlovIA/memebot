@@ -52,7 +52,7 @@ HTML = """
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>💅🏻Панель модерации мемов</title>
+<title>🤡Панель модерации мемов</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
   body { padding: 1rem; background:#fdfdfd; }
@@ -97,7 +97,7 @@ HTML = """
 <body>
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>💅🏻Панель модерации мемов</h3>
+      <h3>🤡Панель модерации мемов</h3>
       <div>
         <button id="refresh" class="btn btn-outline-primary me-2">Обновить</button>
         <label class="btn btn-success mb-0">
