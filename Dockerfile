@@ -17,6 +17,7 @@ COPY memes ./memes
 COPY config.yaml .
 
 # Устанавливаем зависимости Python
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Создаем папку для логов

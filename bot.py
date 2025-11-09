@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 CONFIG_PATH = os.path.join(os.getcwd(), "config.yaml")
 EDITORS = set()
 CONTROL_PANEL_URL = None
-CONTROL_PANEL_PORT = 7860
+CONTROL_PANEL_PORT = 8501
 CONFIG = {}
 MEMES_FOLDER = ""
 ADMINS = set()
@@ -73,7 +73,7 @@ def load_config(path=CONFIG_PATH):
     ADMINS.update(CONFIG.get('admins', []))
     EDITORS.update(CONFIG.get('editors', []))
     CONTROL_PANEL_URL = CONFIG.get('control_panel_url', "") or None
-    CONTROL_PANEL_PORT = CONFIG.get('control_panel_port', 7860)
+    CONTROL_PANEL_PORT = int(CONFIG.get('control_panel_port', 8501))
     if not os.path.exists(MEMES_FOLDER):
         os.makedirs(MEMES_FOLDER)
     logger.info(f"Config loaded. Memes folder: {MEMES_FOLDER}. Admins: {ADMINS}. Editors: {EDITORS}")
