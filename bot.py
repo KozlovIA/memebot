@@ -118,14 +118,12 @@ def get_random_meme():
 
     # Сбрасываем порядок, если длина списка изменилась
     if 'LAST_MEMES_COUNT' not in globals() or LAST_MEMES_COUNT != len(MEMES_LIST):
-        MEME_ORDER = np.random.permutation(len(MEMES_LIST)).tolist()
-        MEME_INDEX = 0
+        prepare_meme_order()
         LAST_MEMES_COUNT = len(MEMES_LIST)
 
     # Если порядок закончился — снова перемешиваем
     if MEME_INDEX >= len(MEMES_LIST):
-        MEME_ORDER = np.random.permutation(len(MEMES_LIST)).tolist()
-        MEME_INDEX = 0
+        prepare_meme_order()
 
     meme_idx = MEME_ORDER[MEME_INDEX]
     MEME_INDEX += 1
@@ -156,11 +154,11 @@ async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⛔ Эта команда доступна только администраторам.", disable_notification=True)
 
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    MEMES_LIST = [
+    memes_list = [
         f for f in os.listdir(MEMES_FOLDER)
         if os.path.isfile(os.path.join(MEMES_FOLDER, f)) and f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))
     ]
-    count = len(MEMES_LIST)
+    count = len(memes_list)
     await update.message.reply_text(f"Сейчас доступно {count} мемов.", disable_notification=True)
 
 def is_admin(username: str):
