@@ -5,7 +5,6 @@ import datetime
 from telegram import Update, InputFile
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, ChatMemberHandler
 
-import numpy as np
 import zipfile
 import tempfile
 import asyncio
@@ -13,7 +12,11 @@ import nest_asyncio
 import socket
 import requests
 
-BOT_VERSION = "v3.0.0: control panel"
+# Импорт модулей для работы с мемами и MongoDB
+from source import meme_manager
+from source.mongo_manager import MongoManager
+
+BOT_VERSION = "v4.0.0: MongoDB integration"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log/log.log"
@@ -38,10 +41,8 @@ CONFIG = {}
 MEMES_FOLDER = ""
 ADMINS = set()
 ALLOW_USER_ADD = True
-MEMES_DAY = {}
-MEMES_LIST = []
-MEME_INDEX = 0
-MEME_ORDER = []
+# Глобальные переменные MEMES_DAY, MEMES_LIST, MEME_INDEX, MEME_ORDER, LAST_MEMES_COUNT
+# теперь хранятся в MongoDB через meme_manager и mongo_manager
 
 
 def get_server_ip():
@@ -76,6 +77,10 @@ def load_config(path=CONFIG_PATH):
     CONTROL_PANEL_PORT = int(CONFIG.get('control_panel_port', 8501))
     if not os.path.exists(MEMES_FOLDER):
         os.makedirs(MEMES_FOLDER)
+    # Устанавливаем папку с мемами в meme_manager
+    meme_manager.set_memes_folder(MEMES_FOLDER)
+    # Синхронизируем файлы из папки с БД при загрузке конфига
+    meme_manager.sync_memes_with_db()
     logger.info(f"Config loaded. Memes folder: {MEMES_FOLDER}. Admins: {ADMINS}. Editors: {EDITORS}")
 
 # --- Проверки прав ---
@@ -88,46 +93,8 @@ def is_editor(username: str) -> bool:
 def is_admin_or_editor(username: str) -> bool:
     return is_admin(username) or is_editor(username)
 
-# --- Загрузка списка мемов ---
-def load_memes_list():
-    global MEMES_LIST
-    MEMES_LIST = [
-        f for f in os.listdir(MEMES_FOLDER)
-        if os.path.isfile(os.path.join(MEMES_FOLDER, f)) and f.lower().endswith(('.jpg','.jpeg','.png','.gif'))
-    ]
-    logger.info(f"Loaded {len(MEMES_LIST)} memes.")
-
-# --- Подготовка и выбор случайного мема ---
-def prepare_meme_order():
-    global MEME_ORDER, MEME_INDEX
-    MEME_ORDER = np.random.permutation(len(MEMES_LIST)).tolist()
-    MEME_INDEX = 0
-
-def get_random_meme():
-    """Возвращает случайный мем из актуальной папки с мемами."""
-    global MEME_ORDER, MEME_INDEX, MEMES_LIST, LAST_MEMES_COUNT
-
-    # Обновляем список мемов
-    MEMES_LIST = [
-        f for f in os.listdir(MEMES_FOLDER)
-        if os.path.isfile(os.path.join(MEMES_FOLDER, f)) and f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))
-    ]
-
-    if not MEMES_LIST:
-        return None
-
-    # Сбрасываем порядок, если длина списка изменилась
-    if 'LAST_MEMES_COUNT' not in globals() or LAST_MEMES_COUNT != len(MEMES_LIST):
-        prepare_meme_order()
-        LAST_MEMES_COUNT = len(MEMES_LIST)
-
-    # Если порядок закончился — снова перемешиваем
-    if MEME_INDEX >= len(MEMES_LIST):
-        prepare_meme_order()
-
-    meme_idx = MEME_ORDER[MEME_INDEX]
-    MEME_INDEX += 1
-    return MEMES_LIST[meme_idx]
+# Функции load_memes_list, prepare_meme_order, get_random_meme
+# теперь находятся в source/meme_manager.py
 
 
 # --- Экспорт мемов в zip ---
@@ -154,21 +121,8 @@ async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⛔ Эта команда доступна только администраторам.", disable_notification=True)
 
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    memes_list = [
-        f for f in os.listdir(MEMES_FOLDER)
-        if os.path.isfile(os.path.join(MEMES_FOLDER, f)) and f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))
-    ]
-    count = len(memes_list)
+    count = meme_manager.get_meme_count()
     await update.message.reply_text(f"Сейчас доступно {count} мемов.", disable_notification=True)
-
-def is_admin(username: str):
-    return username in ADMINS
-
-def reset_memes_day_if_needed():
-    today = datetime.date.today()
-    to_delete = [user_id for user_id, (fname, dt) in MEMES_DAY.items() if dt != today]
-    for user_id in to_delete:
-        del MEMES_DAY[user_id]
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -203,40 +157,26 @@ async def help_admins(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/control_panel - ссылка на панель мемов\n"
         "/lock_mem_add - запретить добавление мемов пользователям\n"
         "/unlock_mem_add - разрешить добавление мемов пользователям\n"
+        "/shuffle_memes - перемешать все мемы\n"
         "/version - версия бота",
         disable_notification=True
     )
 
 async def random_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    meme_file = get_random_meme()
+    meme_file = meme_manager.get_random_meme()
     if not meme_file:
         await update.message.reply_text("Мемы не найдены :(", disable_notification=True)
         return
-    path = MEMES_FOLDER + "/" + meme_file
-    await update.message.reply_photo(photo=open(path, 'rb'), disable_notification=True)
+    path = os.path.join(MEMES_FOLDER, meme_file)
+    with open(path, 'rb') as f:
+        await update.message.reply_photo(photo=f, disable_notification=True)
 
 async def meme_of_the_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    reset_memes_day_if_needed()
     user_id = update.effective_user.id
-    today = datetime.date.today()
-
-    if user_id in MEMES_DAY:
-        fname, dt = MEMES_DAY[user_id]
-        if dt == today:
-            path = os.path.join(MEMES_FOLDER, fname)
-            if os.path.exists(path):
-                with open(path, 'rb') as f:
-                    await update.message.reply_photo(photo=f, disable_notification=True)
-                return
-            else:
-                del MEMES_DAY[user_id]
-
-    meme_file = get_random_meme()
+    meme_file = meme_manager.get_user_meme_of_the_day(user_id)
     if not meme_file:
         await update.message.reply_text("Мемы не найдены :(", disable_notification=True)
         return
-
-    MEMES_DAY[user_id] = (meme_file, today)
     path = os.path.join(MEMES_FOLDER, meme_file)
     with open(path, 'rb') as f:
         await update.message.reply_photo(photo=f, disable_notification=True)
@@ -286,12 +226,15 @@ async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
             save_path = os.path.join(MEMES_FOLDER, filename)
             try:
                 await file.download_to_drive(save_path)
+                # Добавляем мем в БД
+                meme_manager.mongo.add_meme(filename)
                 logger.info(f"Saved meme from album to {save_path}")
                 saved_count += 1
             except Exception as e:
                 logger.error(f"Failed to save meme from album: {e}")
 
-        load_memes_list()
+        # Синхронизируем с БД (на случай, если что-то пропустили)
+        meme_manager.sync_memes_with_db()
         await update.message.reply_text(f"✅ Добавлено {saved_count} мемов из альбома. Спасибо 😊", disable_notification=True)
     else:
         # Одиночное изображение
@@ -302,12 +245,15 @@ async def add_meme(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_path = os.path.join(MEMES_FOLDER, filename)
         try:
             await file.download_to_drive(save_path)
+            # Добавляем мем в БД
+            meme_manager.mongo.add_meme(filename)
             logger.info(f"Saved meme to {save_path}")
         except Exception as e:
             logger.error(f"Failed to save meme: {e}")
             await update.message.reply_text("❌ Ошибка при сохранении мема.", disable_notification=True)
             return
-        load_memes_list()
+        # Синхронизируем с БД (на случай, если что-то пропустили)
+        meme_manager.sync_memes_with_db()
         await update.message.reply_text("✅ Мем успешно добавлен! Спасибо 😊", disable_notification=True)
 
 async def lock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -330,6 +276,23 @@ async def unlock_mem_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def version(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Версия бота: {BOT_VERSION}", disable_notification=True)
+
+
+# --- Перемешивание мемов (для админов) ---
+async def shuffle_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Команда для перемешивания всех мемов (доступна только админам)"""
+    user = update.effective_user
+    username = user.username if user.username else user.name
+    if not is_admin(username):
+        await update.message.reply_text("⛔ Команда доступна только администраторам.", disable_notification=True)
+        return
+    
+    try:
+        meme_manager.shuffle_meme_order(admin_shuffle=True)
+        await update.message.reply_text("✅ Все мемы перемешаны!", disable_notification=True)
+    except Exception as e:
+        logger.error(f"Failed to shuffle memes: {e}")
+        await update.message.reply_text("❌ Ошибка при перемешивании мемов.", disable_notification=True)
 
 
 # --- Панель управления мемами ---
@@ -417,7 +380,7 @@ async def remove_editor_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def main():
     load_config()
-    load_memes_list()
+    # load_memes_list() больше не нужна, синхронизация происходит в load_config()
     application = ApplicationBuilder().token(CONFIG['token']).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help))
@@ -432,6 +395,7 @@ async def main():
     application.add_handler(CommandHandler("add_editor", add_editor_cmd))
     application.add_handler(CommandHandler("remove_editor", remove_editor_cmd))
     application.add_handler(CommandHandler("control_panel", control_panel))
+    application.add_handler(CommandHandler("shuffle_memes", shuffle_memes))
     application.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, add_meme))
     await application.initialize()
     await application.start()
