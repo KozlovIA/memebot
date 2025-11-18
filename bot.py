@@ -18,7 +18,7 @@ from io import BytesIO
 from source import meme_manager
 from source.mongo_manager import MongoManager
 
-BOT_VERSION = "v4.2: MongoDB integration. Stream export ZIP_STORED"
+BOT_VERSION = "v4.2: MongoDB integration. No export"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log/log.log"
@@ -117,20 +117,21 @@ def create_memes_zip():
 async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     username = f"{user.username}" if user.username else user.name
-
+    
     if username in list(ADMINS):
-        zip_path = meme_manager.create_memes_zip_from_db_stream()
-        try:
-            with open(zip_path, 'rb') as f:
-                await update.message.reply_document(
-                    document=f,
-                    filename="memes.zip",
-                    disable_notification=True
-                )
-        finally:
-            os.remove(zip_path)
-    else:
-        await update.message.reply_text("⛔ Эта команда доступна только администраторам.", disable_notification=True)
+        await update.message.reply_text("⛔ команда временно недоступна", disable_notification=True)
+    #     zip_path = meme_manager.create_memes_zip_from_db_stream()
+    #     try:
+    #         with open(zip_path, 'rb') as f:
+    #             await update.message.reply_document(
+    #                 document=f,
+    #                 filename="memes.zip",
+    #                 disable_notification=True
+    #             )
+    #     finally:
+    #         os.remove(zip_path)
+    # else:
+    #     await update.message.reply_text("⛔ Эта команда доступна только администраторам.", disable_notification=True)
 
 async def meme_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await ensure_memes_count_async()   # NEW
