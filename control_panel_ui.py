@@ -7,8 +7,10 @@ Flask мем-панель для ручной модерации
 """
 import os
 from pathlib import Path
-from flask import Flask, render_template_string, request, jsonify, send_from_directory, abort
+from flask import Flask, render_template_string, request, jsonify, send_from_directory, abort, Response
 from werkzeug.utils import secure_filename
+import base64
+from source.mongo_manager import MongoManager
 
 # ------------------ НАСТРОЙКИ ------------------
 FLASK_HOST = "0.0.0.0"
@@ -24,6 +26,8 @@ THUMBNAILS_PER_PAGE = IMAGES_PER_ROW * ROWS_ON_SCREEN
 
 ALLOWED_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
 SORT_BY_MTIME_DESC = True
+
+mongo = MongoManager()
 # ------------------------------------------------
 
 app = Flask(__name__)
@@ -148,7 +152,7 @@ async function loadPage(p) {
   data.images.forEach(name => {
     const div = document.createElement('div');
     div.className = 'thumb';
-    div.innerHTML = `<img src="/memes/${encodeURIComponent(name)}" alt="${name}">`;
+    div.innerHTML = `<img src="/memes/${name}" alt="Мем #${name}">`;
     div.onclick = () => openModal(name);
     gallery.appendChild(div);
   });
@@ -157,26 +161,39 @@ async function loadPage(p) {
 
 function openModal(name) {
   currentFile = name;
-  document.getElementById('fileName').innerText = name;
-  document.getElementById('fullImage').src = '/memes/' + encodeURIComponent(name);
+  document.getElementById('fileName').innerText = `Мем #${name}`;
+  document.getElementById('fullImage').src = '/memes/' + name;
   const modal = new bootstrap.Modal(document.getElementById('modalView'));
   modal.show();
 }
 
 document.getElementById('deleteBtn').onclick = async () => {
-  if (!currentFile) return;
-  if (!confirm(`Удалить "${currentFile}"?`)) return;
+  if (currentFile === null) return;
+  if (!confirm(`Удалить "Мем #${currentFile}"?`)) return;
+
   const r = await fetch('/api/delete', {
-    method: 'POST', headers: {'Content-Type':'application/json'},
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
     body: JSON.stringify({filename: currentFile})
   });
+
   if (r.ok) {
-    [...gallery.children].forEach(div => {
-      const img = div.querySelector('img');
-      if (img && img.alt === currentFile) div.remove();
-    });
-    bootstrap.Modal.getInstance(document.getElementById('modalView')).hide();
-  } else alert('Ошибка удаления');
+    // Закрываем модалку
+    const modalEl = document.getElementById('modalView');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance.hide();
+
+    // Сбрасываем галерею
+    gallery.innerHTML = '';
+    page = 1;
+    loadMore.style.display = 'block';
+    loadPage(page);
+
+    // Сбрасываем currentFile
+    currentFile = null;
+  } else {
+    alert('Ошибка удаления');
+  }
 };
 
 loadMore.onclick = () => { page++; loadPage(page); };
@@ -213,24 +230,30 @@ def index():
     return render_template_string(HTML, cols=IMAGES_PER_ROW, per_page=THUMBNAILS_PER_PAGE)
 
 
-@app.route("/memes/<path:filename>")
-def serve_image(filename):
-    safe = Path(filename).name
-    path = MEMES_FOLDER / safe
-    if not path.exists():
+@app.route("/memes/<int:meme_id>")
+def serve_image(meme_id):
+    meme = mongo.get_meme_by_id(meme_id)
+    if not meme or "image" not in meme:
         abort(404)
-    return send_from_directory(MEMES_FOLDER, safe)
+    img_data = base64.b64decode(meme["image"])
+    return Response(img_data, mimetype="image/png")  # Можно пытаться угадать формат по данным
 
 
 @app.route("/api/images")
 def api_images():
     page = int(request.args.get("page", 1))
-    imgs = list_images_sorted()
-    start = (page - 1) * THUMBNAILS_PER_PAGE
-    end = start + THUMBNAILS_PER_PAGE
+    per_page = THUMBNAILS_PER_PAGE
+
+    all_memes = mongo.get_all_memes()
+    start = (page - 1) * per_page
+    end = start + per_page
+
+    memes_page = all_memes[start:end]
+    meme_ids = [m["_id"] for m in memes_page]
+
     return jsonify({
-        "images": imgs[start:end],
-        "has_more": end < len(imgs)
+        "images": meme_ids,
+        "has_more": end < len(all_memes)
     })
 
 
@@ -239,22 +262,15 @@ def api_upload():
     files = request.files.getlist("files")
     if not files:
         return "Нет файлов", 400
-    saved = []
+    saved_ids = []
     for f in files:
         name = secure_filename(f.filename)
         if not allowed_file(name):
             return f"Недопустимое расширение: {name}", 400
-        path = MEMES_FOLDER / name
-        if path.exists():
-            base, ext = os.path.splitext(name)
-            i = 1
-            while (MEMES_FOLDER / f"{base}_{i}{ext}").exists():
-                i += 1
-            name = f"{base}_{i}{ext}"
-            path = MEMES_FOLDER / name
-        f.save(path)
-        saved.append(name)
-    return jsonify({"saved": saved})
+        base64_str = base64.b64encode(f.read()).decode("utf-8")
+        meme_id = mongo.add_meme_base64(base64_str)
+        saved_ids.append(meme_id)
+    return jsonify({"saved": saved_ids})
 
 
 @app.route("/api/delete", methods=["POST"])
@@ -262,12 +278,11 @@ def api_delete():
     data = request.get_json()
     if not data or "filename" not in data:
         return "Неверный запрос", 400
-    name = Path(data["filename"]).name
-    path = MEMES_FOLDER / name
-    if not path.exists():
+    meme_id = int(data["filename"])
+    if mongo.delete_meme(meme_id):
+        return "", 204
+    else:
         return "Не найден", 404
-    path.unlink()
-    return "", 204
 
 
 if __name__ == "__main__":

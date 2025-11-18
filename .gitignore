@@ -5,3 +5,7 @@ images
 memes_short
 old_files
 memes
+mongo_data
+temp
+test.ipynb
+*.pyc*

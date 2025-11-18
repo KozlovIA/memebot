@@ -3,36 +3,30 @@ version: "3.9"
 services:
   mongo:
     image: mongo:7.0
-    container_name: memebot_mongo
+    container_name: mongo
     restart: always
-    ports:
-      - "27017:27017"  # доступ к БД с хоста
+    env_file: .env
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    ports:
+      - "${MONGO_PORT}:27017"
     volumes:
-      - ./mongo_data:/data/db  # сохраняем данные
-    networks:
-      - memebot_net
+      - mongo_data:/data/db
 
-  memebot:
-    build: .
-    container_name: memebot_v3
+  memebot_v4:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: memebot_v4
     restart: always
+    env_file: .env
+    ports:
+      - "8501:8501"   # порт панели
+    volumes:
+      - ./log:/app/log   # если хочешь сохранять логи на хост
     depends_on:
       - mongo
-    ports:
-      - "8501:8501"  # если у тебя есть веб-панель или Streamlit/Flask UI
-    environment:
-      MONGO_URI: mongodb://${MONGO_USER}:${MONGO_PASS}@mongo:27017/
-      # можешь добавить и другие переменные из своего config.yaml, например:
-      # TELEGRAM_TOKEN: "..."
-      # CONTROL_PANEL_PORT: "8501"
-    volumes:
-      - ./memes:/memes  # если бот работает с локальной папкой мемов
-    networks:
-      - memebot_net
 
-networks:
-  memebot_net:
-    driver: bridge
+volumes:
+  mongo_data:
