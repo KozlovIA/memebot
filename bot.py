@@ -121,11 +121,12 @@ async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if username in list(ADMINS):
         zip_path = meme_manager.create_memes_zip_from_db_stream()
         try:
-            await update.message.reply_document(
-                document=open(zip_path, 'rb'),
-                filename="memes.zip",
-                disable_notification=True
-            )
+            with open(zip_path, 'rb') as f:
+                await update.message.reply_document(
+                    document=f,
+                    filename="memes.zip",
+                    disable_notification=True
+                )
         finally:
             os.remove(zip_path)
     else:

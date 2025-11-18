@@ -270,7 +270,7 @@ def create_memes_zip_from_db_stream():
     os.makedirs(temp_folder, exist_ok=True)
     zip_path = f"{temp_folder}/memes_export_{timestamp}.zip"
 
-    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_STORED) as zipf:
         for meme in cursor:
             meme_id = meme["_id"]
             base64_str = meme["image"]
