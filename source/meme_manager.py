@@ -2,6 +2,9 @@ import os
 import datetime
 import numpy as np
 import logging
+import base64
+from io import BytesIO
+import zipfile
 from source.mongo_manager import MongoManager
 
 logger = logging.getLogger(__name__)
@@ -40,68 +43,82 @@ def sync_memes_with_db():
 # -------------------- MEME_ORDER (перемешивание) --------------------
 def shuffle_meme_order(admin_shuffle=False):
     """
-    Перемешивание MEME_ORDER
-    
-    Args:
-        admin_shuffle: Если True, перемешивает все мемы. 
-                      Если False, перемешивает только правую часть после текущего элемента MEME_INDEX.
-    
-    Returns:
-        Новый MEME_ORDER (список _id мемов)
+    Перемешивание MEME_ORDER с учётом логики:
+    1) Удаление несуществующих индексов
+    2) Коррекция MEME_INDEX при удалениях
+    3) Частичное перемешивание хвоста после MEME_INDEX
+    4) Полное перемешивание при admin_shuffle=True
     """
+
     state = mongo.get_bot_state()
     memes = mongo.get_all_memes()
-    
+
     if not memes:
         logger.warning("No memes in database")
         return []
-    
-    # Получаем список всех _id мемов
-    all_meme_ids = [m["_id"] for m in memes]
-    
-    # Получаем текущий MEME_ORDER или создаем новый
+
+    # Все существующие _id
+    all_meme_ids = sorted(m["_id"] for m in memes)
+
+    # MEME_ORDER и MEME_INDEX
     current_order = state.get("MEME_ORDER", [])
-    current_meme_index_value = state.get("MEME_INDEX", 0)
-    
-    # Если админ вызвал перемешивание, перемешиваем все
+    meme_index = state.get("MEME_INDEX", 0)  # Важно: это позиция, а не ID!
+
+    # --- 1. Фильтрация MEME_ORDER от отсутствующих ID ---
+    cleaned_order = []
+    removed_count_left = 0
+
+    for pos, meme_id in enumerate(current_order):
+        if meme_id in all_meme_ids:
+            cleaned_order.append(meme_id)
+        else:
+            if pos <= meme_index:
+                removed_count_left += 1
+
+    # Если список пуст — создаём полный порядок по БД
+    if not cleaned_order:
+        cleaned_order = all_meme_ids.copy()
+        meme_index = 0
+    else:
+        # --- 2. Корректируем MEME_INDEX после удаления слева ---
+        meme_index = max(0, meme_index - removed_count_left)
+        # MEME_INDEX не должен выходить за пределы списка
+        if meme_index >= len(cleaned_order):
+            meme_index = max(0, len(cleaned_order) - 1)
+
+    # Список актуален
+    current_order = cleaned_order
+
+    # --- 4. Admin shuffle = полный пересорт ---
     if admin_shuffle:
         new_order = [int(x) for x in np.random.permutation(all_meme_ids)]
-        # Устанавливаем MEME_INDEX на первый элемент нового порядка
-        current_meme_index_value = int(new_order[0]) if new_order else 0
-        logger.info("Admin shuffle: all memes shuffled")
+        meme_index = 0
+        logger.info("Admin shuffle: full reshuffle")
     else:
-        # Перемешиваем только правую часть после текущего элемента
-        # MEME_INDEX - это значение элемента в MEME_ORDER, а не индекс позиции
-        if current_order and current_meme_index_value in current_order:
-            # Находим позицию текущего элемента
-            try:
-                current_position = current_order.index(current_meme_index_value)
-                # Левая часть (до текущего элемента включительно) остается без изменений
-                left_part = current_order[:current_position + 1]
-                # Правая часть (после текущего элемента) перемешивается
-                right_part = [int(x) for x in np.random.permutation(current_order[current_position + 1:])]
-                new_order = left_part + right_part
-                # MEME_INDEX остается на том же элементе (current_meme_index_value не меняется)
-                logger.info(f"Shuffled right part after element {current_meme_index_value} (position {current_position})")
-            except ValueError:
-                # Если текущий элемент не найден в порядке, перемешиваем все
-                new_order = [int(x) for x in np.random.permutation(all_meme_ids)]
-                current_meme_index_value = int(new_order[0]) if new_order else 0
-                logger.warning(f"Current meme index {current_meme_index_value} not found in order, shuffling all")
+        # --- 3. Частичное перемешивание правой части ---
+        if meme_index < len(current_order) - 1:
+            left = current_order[:meme_index + 1]
+            right = current_order[meme_index + 1:]
+
+            right_shuffled = [int(x) for x in np.random.permutation(right)]
+            new_order = left + right_shuffled
+
+            logger.info(
+                f"Partial shuffle after MEME_INDEX={meme_index}, "
+                f"left size={len(left)}, right size={len(right)}"
+            )
         else:
-            # Если MEME_ORDER пуст или текущий элемент не найден, перемешиваем все
-            new_order = [int(x) for x in np.random.permutation(all_meme_ids)]
-            current_meme_index_value = int(new_order[0]) if new_order else 0
-            logger.info("Empty or invalid order, shuffling all memes")
-    
-    # Обновляем состояние в БД
-    total_memes = len(all_meme_ids)
-    mongo.update_bot_state(
-        MEME_ORDER=new_order,
-        MEME_INDEX=current_meme_index_value,
-        LAST_MEMES_COUNT=total_memes
-    )
-    
+            # Нечего перемешивать
+            new_order = current_order.copy()
+            logger.info("Nothing to shuffle (pointer at end)")
+
+    # --- Сохраняем в БД ---
+    mongo.update_bot_state({
+        "MEME_ORDER": new_order,
+        "MEME_INDEX": int(meme_index),
+        "LAST_MEMES_COUNT": len(all_meme_ids)
+    })
+
     return new_order
 
 
@@ -119,108 +136,159 @@ def prepare_meme_order_if_needed():
         return True
     return False
 
+def ensure_memes_count_is_actual():
+    """Проверяет, совпадает ли количество мемов с сохранённым LAST_MEMES_COUNT.
+    Если нет — перемешивает MEME_ORDER и обновляет LAST_MEMES_COUNT.
+    """
+    current_count = get_meme_count()
+    state = mongo.get_bot_state()
 
-# -------------------- get_random_meme --------------------
+    last_count = state.get("LAST_MEMES_COUNT", None)
+
+    print('last_count', last_count, 'current_count', current_count)
+
+    # Если кол-во другое → надо пересоздать и перемешать порядок
+    if last_count is None or last_count != current_count:
+        new_order = shuffle_meme_order(admin_shuffle=False)
+        print(new_order)
+        return True
+
+    return False
+
+
+# -------------------- get_random_meme (ОСНОВНОЕ ИЗМЕНЕНИЕ) --------------------
 def get_random_meme():
     """
-    Возвращает файл случайного мема с учётом MEME_ORDER и MEME_INDEX.
-    Синхронизирует список файлов с БД перед использованием.
+    Возвращает BASE64 строки мема с учётом MEME_ORDER и MEME_INDEX.
+    Больше НЕ использует папку с мемами.
     """
-    # Синхронизируем файлы из папки с БД
-    sync_memes_with_db()
-    
-    # Проверяем, нужно ли обновить MEME_ORDER
-    prepare_meme_order_if_needed()
+    # Никакой sync с файлов нет
+    # prepare_meme_order_if_needed()
     
     state = mongo.get_bot_state()
     meme_order = state.get("MEME_ORDER", [])
-    current_meme_index_value = state.get("MEME_INDEX", 0)
+    current_meme_id = state.get("MEME_INDEX", 0)
     total_memes = mongo.count_memes()
     
     if not meme_order or total_memes == 0:
-        logger.warning("No memes available")
-        return None
+        logger.warning("No memes available in DB")
+        return None, None
     
-    # Если индекс вышел за границы или текущий элемент не найден, перемешиваем заново
-    if current_meme_index_value not in meme_order or len(meme_order) != total_memes:
+    # Если текущего ID нет в порядке — пересобираем порядок
+    if current_meme_id not in meme_order or len(meme_order) != total_memes:
         shuffle_meme_order(admin_shuffle=False)
         state = mongo.get_bot_state()
         meme_order = state.get("MEME_ORDER", [])
-        current_meme_index_value = state.get("MEME_INDEX", 0)
+        current_meme_id = state.get("MEME_INDEX", 0)
     
-    # Находим позицию текущего элемента в порядке
+    # Определяем позицию
     try:
-        current_position = meme_order.index(current_meme_index_value)
+        position = meme_order.index(current_meme_id)
     except ValueError:
-        # Если элемент не найден, берем первый
-        current_position = 0
-        current_meme_index_value = meme_order[0]
+        position = 0
+        current_meme_id = meme_order[0]
     
-    # Если дошли до конца, перемешиваем все заново
-    if current_position >= len(meme_order) - 1:
+    # Если дошли до конца — полное перемешивание
+    if position >= len(meme_order) - 1:
         shuffle_meme_order(admin_shuffle=True)
         state = mongo.get_bot_state()
         meme_order = state.get("MEME_ORDER", [])
-        current_position = 0
-        current_meme_index_value = meme_order[0] if meme_order else 0
+        position = 0
+        current_meme_id = meme_order[0]
     else:
-        # Переходим к следующему элементу
-        current_position += 1
-        current_meme_index_value = meme_order[current_position]
+        position += 1
+        current_meme_id = meme_order[position]
     
-    # Получаем мем по _id
-    meme_doc = mongo.get_meme_by_id(current_meme_index_value)
+    # Получаем документ мема
+    meme_doc = mongo.get_meme_by_id(current_meme_id)
     if not meme_doc:
-        logger.error(f"Meme with _id={current_meme_index_value} not found in DB")
-        return None
+        logger.error(f"Meme with _id={current_meme_id} not found in DB")
+        return None, None
     
-    meme_file = meme_doc["file"]
-    
-    # Обновляем MEME_INDEX в БД (сохраняем значение элемента, а не позицию)
-    mongo.update_bot_state(MEME_INDEX=current_meme_index_value)
-    
-    return meme_file
+    base64_image = meme_doc["image"]
+
+    # Обновляем индекс
+    mongo.update_bot_state({'MEME_INDEX': current_meme_id})
+
+    # Возвращаем base64 изображение
+    data = base64.b64decode(base64_image)
+    bio = BytesIO(data)
+    bio.name = f"image.jpg"  # важно указать имя файла!
+
+    return bio, current_meme_id
 
 
 # -------------------- MEMES_DAY --------------------
-def reset_memes_day_if_needed():
-    """Удаляем устаревшие мемы дня по дате"""
-    today = datetime.date.today()
-    today_str = today.isoformat()
-    mongo.cleanup_old_user_memes(today_str)
-
-
 def get_user_meme_of_the_day(user_id):
     """
-    Получить мем дня для пользователя.
-    Если мем дня уже есть и он сегодняшний - возвращает его.
-    Иначе выбирает новый мем и сохраняет его.
+    Возвращает base64 мема дня.
     """
-    reset_memes_day_if_needed()
-    today = datetime.date.today()
-    today_str = today.isoformat()
+    today = datetime.date.today().isoformat()
     
-    user_meme = mongo.get_user_meme(user_id)
-    
-    # Если у пользователя уже есть мем дня на сегодня
-    if user_meme and user_meme.get("date") == today_str:
-        meme_file = user_meme.get("meme_file")
-        # Проверяем, что файл существует
-        if meme_file and os.path.exists(os.path.join(MEMES_FOLDER, meme_file)):
-            return meme_file
+    user_doc = mongo.get_user_meme(user_id)
+
+    # Если мем уже есть и сегодняшний
+    if user_doc and user_doc.get("date") == today:
+        meme_id = user_doc.get("meme_id")
+        meme_doc = mongo.get_meme_by_id(meme_id)
+        if meme_doc:
+            base64_img = meme_doc["image"]
+            data = base64.b64decode(base64_img)
+            base64_img = BytesIO(data)
+            base64_img.name = f"image.jpg"
+            return base64_img
         else:
-            # Если файл не найден, удаляем запись и выбираем новый
             mongo.delete_user_meme(user_id)
+            # Выбираем новый мем
+            base64_img, meme_id = get_random_meme()
+    else:
+        # Выбираем новый мем
+        base64_img, meme_id = get_random_meme()
+
+    if base64_img is None:
+        return 'None', 'None'
     
-    # Выбираем новый мем дня
-    meme_file = get_random_meme()
-    if meme_file:
-        mongo.set_user_meme(user_id, meme_file, today_str)
-    
-    return meme_file
+    mongo.set_user_meme(user_id, meme_id, today)
+
+    return base64_img
 
 
+# -------------------- get_meme_count --------------------
 def get_meme_count():
-    """Получить количество мемов (синхронизирует с папкой перед подсчетом)"""
-    sync_memes_with_db()
+    """Получить количество мемов из MongoDB."""
     return mongo.count_memes()
+
+
+# -------------------- create_memes_zip_from_db --------------------
+def create_memes_zip_from_db():
+    """
+    Создаёт ZIP архив всех мемов, хранящихся в MongoDB (коллекция memes).
+    Каждый документ содержит {"_id": int, "image": base64}.
+    """
+    memes = mongo.get_all_memes()  # [{_id, image}, ...]
+
+    if not memes:
+        raise ValueError("База данных пуста — нет ни одного мема!")
+
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    temp_folder = 'temp'
+    os.makedirs(temp_folder, exist_ok=True)
+    zip_path = f"{temp_folder}/memes_export_{timestamp}.zip"
+
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for meme in memes:
+            meme_id = meme["_id"]
+            base64_str = meme["image"]
+
+            try:
+                binary = base64.b64decode(base64_str)
+            except Exception as e:
+                logger.error(f"Ошибка декодирования base64 для ID={meme_id}: {e}")
+                continue
+
+            # имя файла внутри архива: 0001.jpg
+            filename = f"{meme_id:04d}.jpg"
+
+            zipf.writestr(filename, binary)
+
+    return zip_path
