@@ -5,3 +5,5 @@ pyyaml==6.0.2
 nest_asyncio==1.6.0
 numpy==1.26.4
 requests==2.32.3
+pymongo==4.15.4
+python-dotenv==1.0.1
