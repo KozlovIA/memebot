@@ -152,3 +152,10 @@ class MongoManager:
     def cleanup_old_user_memes(self, today_date):
         result = self.user_memes.delete_many({"date": {"$ne": today_date}})
         return result.deleted_count
+
+    def get_memes_cursor(self):
+            """
+            Возвращает курсор для всех мемов, отсортированных по _id.
+            Используется для потоковой обработки без загрузки всех документов в память.
+            """
+            return self.memes.find({}, sort=[("_id", 1)])

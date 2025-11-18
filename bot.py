@@ -18,7 +18,7 @@ from io import BytesIO
 from source import meme_manager
 from source.mongo_manager import MongoManager
 
-BOT_VERSION = "v4.0: MongoDB integration"
+BOT_VERSION = "v4.1: MongoDB integration. Stream export"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log/log.log"
@@ -119,7 +119,7 @@ async def export_memes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     username = f"{user.username}" if user.username else user.name
 
     if username in list(ADMINS):
-        zip_path = meme_manager.create_memes_zip_from_db()
+        zip_path = meme_manager.create_memes_zip_from_db_stream()
         try:
             await update.message.reply_document(
                 document=open(zip_path, 'rb'),

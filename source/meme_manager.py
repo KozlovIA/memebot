@@ -260,35 +260,27 @@ def get_meme_count():
 
 
 # -------------------- create_memes_zip_from_db --------------------
-def create_memes_zip_from_db():
+def create_memes_zip_from_db_stream():
     """
-    Создаёт ZIP архив всех мемов, хранящихся в MongoDB (коллекция memes).
-    Каждый документ содержит {"_id": int, "image": base64}.
+    Создает ZIP архив мемов из MongoDB без загрузки всех мемов в память.
     """
-    memes = mongo.get_all_memes()  # [{_id, image}, ...]
-
-    if not memes:
-        raise ValueError("База данных пуста — нет ни одного мема!")
-
+    cursor = mongo.get_memes_cursor()  # <- новый потоковый метод
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     temp_folder = 'temp'
     os.makedirs(temp_folder, exist_ok=True)
     zip_path = f"{temp_folder}/memes_export_{timestamp}.zip"
 
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-        for meme in memes:
+        for meme in cursor:
             meme_id = meme["_id"]
             base64_str = meme["image"]
-
             try:
                 binary = base64.b64decode(base64_str)
             except Exception as e:
                 logger.error(f"Ошибка декодирования base64 для ID={meme_id}: {e}")
                 continue
 
-            # имя файла внутри архива: 0001.jpg
             filename = f"{meme_id:04d}.jpg"
-
-            zipf.writestr(filename, binary)
+            zipf.writestr(filename, binary)  # записываем сразу в ZIP
 
     return zip_path
