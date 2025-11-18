@@ -18,7 +18,7 @@ from io import BytesIO
 from source import meme_manager
 from source.mongo_manager import MongoManager
 
-BOT_VERSION = "v4.1: MongoDB integration. Stream export"
+BOT_VERSION = "v4.2: MongoDB integration. Stream export ZIP_STORED"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log/log.log"
