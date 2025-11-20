@@ -60,6 +60,7 @@ HTML = """
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
   body { padding: 1rem; background:#fdfdfd; }
+  .top-row { align-items: center; }
   .grid {
     display: grid;
     grid-template-columns: repeat({{ cols }}, 1fr);
@@ -74,6 +75,7 @@ HTML = """
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: transform 0.15s ease;
   }
   .thumb img {
     width: 100%;
@@ -84,10 +86,10 @@ HTML = """
   .thumb img:hover {
     transform: scale(1.05);
   }
-  @memes (max-width: 768px) {
+  @media (max-width: 768px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
   }
-  @memes (max-width: 480px) {
+  @media (max-width: 480px) {
     .grid { grid-template-columns: repeat(1, 1fr); }
   }
   .full-img {
@@ -100,14 +102,17 @@ HTML = """
 </head>
 <body>
   <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>🤡Панель модерации мемов</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3 top-row">
+      <div>
+        <h3 class="mb-0">🤡Панель модерации мемов</h3>
+        <div class="text-muted fs-5">Всего мемов: <span id="count">0</span></div>
+      </div>
       <div>
         <button id="refresh" class="btn btn-outline-primary me-2">Обновить</button>
         <label class="btn btn-success mb-0">
-          Добавить фото
-          <input id="upload" type="file" accept="image/*" multiple hidden>
-        </label>
+        <span id="uploadText">Добавить фото</span>
+        <input id="upload" type="file" accept="image/*" multiple hidden>
+      </label>
       </div>
     </div>
 
@@ -145,18 +150,36 @@ let gallery = document.getElementById('gallery');
 let loadMore = document.getElementById('loadMore');
 let currentFile = null;
 
+async function updateCount() {
+  try {
+    const r = await fetch('/api/count');
+    if (!r.ok) return;
+    const data = await r.json();
+    document.getElementById('count').innerText = data.count;
+  } catch (e) {
+    console.error('count error', e);
+  }
+}
+
 async function loadPage(p) {
   const r = await fetch(`/api/images?page=${p}`);
   if (!r.ok) return;
   const data = await r.json();
-  data.images.forEach(name => {
+  data.images.forEach(id => {
     const div = document.createElement('div');
     div.className = 'thumb';
-    div.innerHTML = `<img src="/memes/${name}" alt="Мем #${name}">`;
-    div.onclick = () => openModal(name);
+    // store id on dataset for later removal
+    div.dataset.memeId = id;
+    div.innerHTML = `<img src="/memes/${id}" alt="Мем #${id}">`;
+    div.onclick = (e) => {
+      // prevent click when clicking inside delete or other controls in future
+      if (e.target.tagName.toLowerCase() === 'button') return;
+      openModal(id);
+    };
     gallery.appendChild(div);
   });
   if (!data.has_more) loadMore.style.display = 'none';
+  await updateCount();
 }
 
 function openModal(name) {
@@ -165,6 +188,24 @@ function openModal(name) {
   document.getElementById('fullImage').src = '/memes/' + name;
   const modal = new bootstrap.Modal(document.getElementById('modalView'));
   modal.show();
+}
+
+// helper: remove thumb element with animation
+function removeThumbAnimated(memeId) {
+  const el = Array.from(gallery.children).find(d => d.dataset && d.dataset.memeId == String(memeId));
+  if (!el) return;
+  // fix current height, then animate to zero
+  const height = el.getBoundingClientRect().height;
+  el.style.transition = 'height 200ms ease, opacity 200ms ease, margin 200ms ease';
+  el.style.height = height + 'px';
+  // force reflow
+  void el.offsetHeight;
+  el.style.opacity = '0';
+  el.style.height = '0px';
+  el.style.margin = '0px';
+  setTimeout(() => {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }, 220);
 }
 
 document.getElementById('deleteBtn').onclick = async () => {
@@ -178,19 +219,24 @@ document.getElementById('deleteBtn').onclick = async () => {
   });
 
   if (r.ok) {
-    // Закрываем модалку
+    // Скрываем модалку
     const modalEl = document.getElementById('modalView');
     const modalInstance = bootstrap.Modal.getInstance(modalEl);
     modalInstance.hide();
 
-    // Сбрасываем галерею
-    gallery.innerHTML = '';
-    page = 1;
-    loadMore.style.display = 'block';
-    loadPage(page);
+    // Плавно удаляем соответствующую миниатюру без полной перезагрузки
+    removeThumbAnimated(currentFile);
+
+    // Обновляем счётчик
+    updateCount();
 
     // Сбрасываем currentFile
     currentFile = null;
+  } else if (r.status === 404) {
+    alert('Мем не найден (уже удалён). Обновляю галерею.');
+    // На случай рассинхронизации — перезагрузим ленту
+    gallery.innerHTML = ''; page = 1; loadMore.style.display = 'block'; loadPage(1);
+    updateCount();
   } else {
     alert('Ошибка удаления');
   }
@@ -198,26 +244,44 @@ document.getElementById('deleteBtn').onclick = async () => {
 
 loadMore.onclick = () => { page++; loadPage(page); };
 document.getElementById('refresh').onclick = () => {
-  gallery.innerHTML = ''; page = 1; loadMore.style.display = 'block'; loadPage(1);
+  gallery.innerHTML = ''; page = 1; loadMore.style.display = 'block'; loadPage(1); updateCount();
 };
 
 document.getElementById('upload').onchange = async (e) => {
   const files = e.target.files;
   if (!files.length) return;
+
   const fd = new FormData();
   for (const f of files) fd.append('files', f);
-  const btn = document.querySelector('label.btn-success');
-  btn.classList.add('disabled');
-  btn.innerText = 'Загрузка...';
+
+  const input = document.getElementById('upload');
+  const text = document.getElementById('uploadText');
+
+  input.disabled = true;
+  text.textContent = 'Загрузка...';
+
   const r = await fetch('/api/upload', {method:'POST', body:fd});
-  btn.classList.remove('disabled');
-  btn.innerText = 'Добавить фото';
+
+  input.disabled = false;
+  text.textContent = 'Добавить фото';
+
+  e.target.value = '';
+
   if (r.ok) {
-    gallery.innerHTML = ''; page = 1; loadMore.style.display = 'block'; loadPage(1);
-  } else alert('Ошибка загрузки');
+    gallery.innerHTML = '';
+    page = 1;
+    loadMore.style.display = 'block';
+    loadPage(1);
+    updateCount();
+  } else {
+    alert('Ошибка загрузки');
+  }
 };
 
+
+// initial load
 loadPage(1);
+updateCount();
 </script>
 </body>
 </html>
@@ -236,7 +300,8 @@ def serve_image(meme_id):
     if not meme or "image" not in meme:
         abort(404)
     img_data = base64.b64decode(meme["image"])
-    return Response(img_data, mimetype="image/png")  # Можно пытаться угадать формат по данным
+    # Попытка минимально корректно вернуть тип, хотя в коде раньше было png
+    return Response(img_data, mimetype="image/png")
 
 
 @app.route("/api/images")
@@ -255,6 +320,15 @@ def api_images():
         "images": meme_ids,
         "has_more": end < len(all_memes)
     })
+
+
+@app.route("/api/count")
+def api_count():
+    try:
+        c = mongo.count_memes()
+    except Exception:
+        c = 0
+    return jsonify({"count": c})
 
 
 @app.route("/api/upload", methods=["POST"])
@@ -278,7 +352,10 @@ def api_delete():
     data = request.get_json()
     if not data or "filename" not in data:
         return "Неверный запрос", 400
-    meme_id = int(data["filename"])
+    try:
+        meme_id = int(data["filename"])
+    except Exception:
+        return "Неверный id", 400
     if mongo.delete_meme(meme_id):
         return "", 204
     else:
@@ -286,4 +363,6 @@ def api_delete():
 
 
 if __name__ == "__main__":
-    app.run(host=FLASK_HOST, port=FLASK_PORT, debug=DEBUG)
+    # На Windows watchdog/reloader иногда вызывает OSError 10038 (select на не-сокете).
+    # Чтобы избежать этой ошибки в разработке — выключаем use_reloader.
+    app.run(host=FLASK_HOST, port=FLASK_PORT, debug=DEBUG, use_reloader=False)
