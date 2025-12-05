@@ -1,6 +1,6 @@
 config.yaml
 prompts
-log
+*.log*
 images
 memes_short
 old_files
@@ -11,3 +11,4 @@ test.ipynb
 *.pyc*
 memes
 .env
+memes_backup_v3

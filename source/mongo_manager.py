@@ -8,7 +8,7 @@ load_dotenv()  # Загружаем .env
 
 logger = logging.getLogger(__name__)
 
-DB_NAME = "memebot_db"
+# DB_NAME = "memebot_db"
 
 
 class MongoManager:
@@ -27,6 +27,7 @@ class MongoManager:
                 mongo_port = os.getenv("MONGO_PORT", "27017")
                 # MONGO_HOST может быть задан в .env или docker-compose, иначе localhost
                 mongo_host = os.getenv("MONGO_HOST", "localhost")
+                mongo_db_name = os.getenv("MONGO_DB_NAME", "memebot_db")
                 
                 if mongo_user and mongo_pass:
                     uri = f"mongodb://{mongo_user}:{mongo_pass}@{mongo_host}:{mongo_port}"
@@ -36,7 +37,7 @@ class MongoManager:
                 logger.info(f"Using MongoDB connection: {mongo_host}:{mongo_port}")
             
             self.client = MongoClient(uri)
-            self.db = self.client[DB_NAME]
+            self.db = self.client[mongo_db_name]
             # Коллекции
             self.bot_state = self.db["bot_state"]
             self.memes = self.db["memes"]
@@ -46,7 +47,7 @@ class MongoManager:
             self.memes.create_index("_id")
             self.user_memes.create_index("_id")
             
-            logger.info(f"Connected to MongoDB: {DB_NAME}")
+            logger.info(f"Connected to MongoDB: {mongo_db_name}")
         except Exception as e:
             logger.error(f"Failed to connect to MongoDB: {e}")
             raise
