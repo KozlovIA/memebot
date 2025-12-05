@@ -1,20 +1,23 @@
-# app.py
-"""
-Flask мем-панель для ручной модерации
-Без потери качества изображений, без создания .thumb_ файлов
-Требуется: Flask==2.3.2
-Запуск: python app.py
-"""
 import os
 from pathlib import Path
+import yaml
 from flask import Flask, render_template_string, request, jsonify, send_from_directory, abort, Response
 from werkzeug.utils import secure_filename
 import base64
 from source.mongo_manager import MongoManager
 
 # ------------------ НАСТРОЙКИ ------------------
+
+# Чтение config.yaml
+CONFIG_PATH = Path("config.yaml")
+if CONFIG_PATH.exists():
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+else:
+    config = {}
+
 FLASK_HOST = "0.0.0.0"
-FLASK_PORT = 8501
+FLASK_PORT = config.get("control_panel_port", 8501)   # <-- читаем YAML
 DEBUG = True
 
 MEMES_FOLDER = Path("memes")
