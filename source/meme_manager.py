@@ -75,6 +75,10 @@ def shuffle_meme_order(admin_shuffle=False):
             if pos <= meme_index:
                 removed_count_left += 1
 
+    # ⭐ ДОБАВЛЯЕМ ОТСУТСТВУЮЩИЕ ID ⭐
+    missing_ids = [m for m in all_meme_ids if m not in cleaned_order]
+    cleaned_order.extend(missing_ids)
+
     # Если список пуст — создаём полный порядок по БД
     if not cleaned_order:
         cleaned_order = all_meme_ids.copy()

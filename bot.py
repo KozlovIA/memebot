@@ -18,7 +18,7 @@ from io import BytesIO
 from source import meme_manager
 from source.mongo_manager import MongoManager
 
-BOT_VERSION = "v4.3: MongoDB integration. Bugfix control_panel / export"
+BOT_VERSION = "v4.4: MongoDB integration. Hotfix/MEME_ORDER add new memes everytime"
 
 # --- Логирование ---
 LOG_FILE = os.getcwd() + "/log/log.log"
