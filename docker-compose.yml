@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   mongo:
     image: mongo:7.0
@@ -14,17 +12,27 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  memebot_v4:
+  memebot_bot:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: memebot_v4
+    container_name: memebot_bot
     restart: always
     env_file: .env
+    command: python bot.py
+    depends_on:
+      - mongo
+
+  memebot_ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: memebot_ui
+    restart: always
+    env_file: .env
+    command: gunicorn -w 2 -b 0.0.0.0:8501 control_panel_ui:app
     ports:
-      - "8501:8501"   # порт панели
-    volumes:
-      - ./log:/app/log   # если хочешь сохранять логи на хост
+      - "8501:8501"
     depends_on:
       - mongo
 
